@@ -1,4 +1,4 @@
-<h1 align="center">AI-Humanizer</h1>
+<h1 align="center">AI Humanize Text</h1>
 
 <p align="center">
   <img src="presentation/ai-humanizer-banner.png" alt="AI-Humanizer turns AI drafts into human-like writing" width="900"/>
@@ -25,9 +25,27 @@ An open-source toolkit that explores **4 proven approaches** to rewrite AI-gener
 > **Want the best results without the hassle?**
 > [Lynote.ai](https://lynote.ai) combines ALL methods below into one intelligent pipeline — it automatically analyzes your text and selects the optimal approach for each passage.
 >
-> **[Try Lynote.ai Free →](https://lynote.ai)**
+## 🔥 Official Free Online Version
+👉 **Use full-featured & unlimited tool here：**
+https://lynote.ai/ai-humanizer
 
 ---
+## Core Advantages
+✅ Convert AI content to natural human writing</br>
+✅ Optimize sentence fluency & readability</br>
+✅ Simple structure, easy secondary development</br>
+✅ Completely open source, free for personal use</br>
+✅ Fast rewriting, no complicated configuration
+
+## Open Source Demo VS Official Web Version
+| Function | Open Source Demo | Lynote Official Website |
+|---------|------------------|-------------------------|
+| Text length limit | Short text only | Support ultra-long article |
+| Rewrite speed | Basic speed | High-speed batch processing |
+| Detection adaptation | Basic optimization | Adapt to Turnitin / GPTZero mainstream detection |
+| Usage limit | Limited times | free unlimited use |
+| Extra features | None | AI summary, grammar correction, multi-style rewriting |
+
 
 ## Techniques
 
@@ -170,6 +188,8 @@ docker compose up -d
 - [FAQ](docs/faq.md)
 
 ---
+
+
 
 ## Contributing
 
