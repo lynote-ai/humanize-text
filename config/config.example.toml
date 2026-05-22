@@ -1,0 +1,22 @@
+# Humanize-Text v1.5 Configuration
+
+[general]
+# Target language for final output
+target_language = "en"
+# Log level: debug, info, warning, error
+log_level = "info"
+
+[api_keys]
+# DeepSeek API key (required for Steps 1-2)
+deepseek_api_key = ""
+# Niutrans API key (required for Steps 4-5)
+niutrans_api_key = ""
+
+[pipeline]
+# DeepSeek model
+model = "deepseek-chat"
+# Temperature for LLM rewriting (1.3 recommended)
+temperature = 1.3
+# Translation chain: defines the language hops
+# Step 1-2 use DeepSeek, Step 3 uses Google, Step 4-5 use Niutrans
+chain = ["zh", "ja", "de", "es"]

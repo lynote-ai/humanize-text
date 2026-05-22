@@ -1,0 +1,172 @@
+{
+  "name": "AI Humanize - Standard Pipeline v1.5",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "start",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [240, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "text",
+              "value": "={{$json.text || 'Your AI-generated text here'}}"
+            }
+          ]
+        }
+      },
+      "id": "input",
+      "name": "Input Text",
+      "type": "n8n-nodes-base.set",
+      "position": [440, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ \"model\": \"deepseek-chat\", \"temperature\": 1.3, \"messages\": [ { \"role\": \"system\", \"content\": \"你是一个专业的文案改写专家,精通多语言本地化。\" }, { \"role\": \"user\", \"content\": \"翻译为中文，去掉 AI 味道，拟人化改写，只输出结果：\\n\" + $json.text } ] }) }}"
+      },
+      "id": "step1",
+      "name": "Step 1: Chinese Rewrite (DeepSeek)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [660, 300],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ \"model\": \"deepseek-chat\", \"temperature\": 1.3, \"messages\": [ { \"role\": \"system\", \"content\": \"你是一个专业的文案改写专家,精通多语言本地化。\" }, { \"role\": \"user\", \"content\": \"翻译为日语，去掉 AI 味道，拟人化改写，只输出结果：\\n\" + $json.choices[0].message.content } ] }) }}"
+      },
+      "id": "step2",
+      "name": "Step 2: Japanese Rewrite (DeepSeek)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 300],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://translate.googleapis.com/translate_a/single",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "client", "value": "gtx" },
+            { "name": "sl", "value": "ja" },
+            { "name": "tl", "value": "de" },
+            { "name": "dt", "value": "t" },
+            { "name": "q", "value": "={{ $json.choices[0].message.content }}" }
+          ]
+        }
+      },
+      "id": "step3",
+      "name": "Step 3: Japanese → German (Google)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1100, 300],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.niutrans.com/NiuTransServer/translation",
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "from", "value": "de" },
+            { "name": "to", "value": "es" },
+            { "name": "apikey", "value": "YOUR_NIUTRANS_KEY" },
+            { "name": "src_text", "value": "={{ $json[0].map(s => s[0]).join('') }}" }
+          ]
+        }
+      },
+      "id": "step4",
+      "name": "Step 4: German → Spanish (Niutrans)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1320, 300],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.niutrans.com/NiuTransServer/translation",
+        "sendBody": true,
+        "contentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "from", "value": "es" },
+            { "name": "to", "value": "en" },
+            { "name": "apikey", "value": "YOUR_NIUTRANS_KEY" },
+            { "name": "src_text", "value": "={{ $json.tgt_text }}" }
+          ]
+        }
+      },
+      "id": "step5",
+      "name": "Step 5: Spanish → English (Niutrans)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1540, 300],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "humanized_text",
+              "value": "={{ $json.tgt_text }}"
+            }
+          ]
+        }
+      },
+      "id": "output",
+      "name": "Output",
+      "type": "n8n-nodes-base.set",
+      "position": [1760, 300],
+      "typeVersion": 2
+    }
+  ],
+  "connections": {
+    "Start": { "main": [[{ "node": "Input Text", "type": "main", "index": 0 }]] },
+    "Input Text": { "main": [[{ "node": "Step 1: Chinese Rewrite (DeepSeek)", "type": "main", "index": 0 }]] },
+    "Step 1: Chinese Rewrite (DeepSeek)": { "main": [[{ "node": "Step 2: Japanese Rewrite (DeepSeek)", "type": "main", "index": 0 }]] },
+    "Step 2: Japanese Rewrite (DeepSeek)": { "main": [[{ "node": "Step 3: Japanese → German (Google)", "type": "main", "index": 0 }]] },
+    "Step 3: Japanese → German (Google)": { "main": [[{ "node": "Step 4: German → Spanish (Niutrans)", "type": "main", "index": 0 }]] },
+    "Step 4: German → Spanish (Niutrans)": { "main": [[{ "node": "Step 5: Spanish → English (Niutrans)", "type": "main", "index": 0 }]] },
+    "Step 5: Spanish → English (Niutrans)": { "main": [[{ "node": "Output", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}
