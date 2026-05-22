@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.5.2] - 2026-05-22
+
+### Restructured
+- **`src/` split into `src/standard/` + `src/methodologies/`** — visual separation of v1.5 production code vs v1.0 reference implementations
+- `src/standard/`: `pipeline.py`, `llm_rewriter.py`, `translators.py` (production)
+- `src/methodologies/`: `humanizer.py`, `translation_chain.py`, `llm_rewriter.py` (restored `LLMRewriteProcessor`), `detection_pipeline.py`, `mixed_engine.py`, `postprocess.py`, `detectors/`, `utils/` (reference)
+- All import paths updated: `python -m src.standard.pipeline`, `from src.standard import run_standard_pipeline`
+- `setup.py`, `scripts/start.*`, `Dockerfile`, all docs, all examples updated to match
+
+### Added
+- **`tests/test_smoke.py`** — 12 smoke tests: import verification, public API surface, pure-function unit tests, showcase file integrity (all pass, no API keys required)
+- **`docs/README.md`** — documentation navigation index with audience-based routing
+
+### Fixed
+- Restored missing `LLMRewriteProcessor` class in `src/methodologies/llm_rewriter.py` (was lost during v1.5 merge — `humanizer.py` dispatcher referenced it but the file only had `deepseek_rewrite`)
+- `docs/faq.md`: chain description updated from DE→ES to FI (was stale from v1.5.0)
+- `docs/installation.md`: repo URL pointed to `molly554/ai-humanize` instead of `lynote-ai/humanize-text`
+- `docs/api-reference.md`: rewritten to document both Standard Pipeline and v1.0 dispatcher
+
 ## [1.5.1] - 2026-05-22
 
 ### Added

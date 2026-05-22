@@ -1,7 +1,7 @@
 """Method 4: Mixed-Engine Translation (v1.0 reference implementation).
 
 Reference implementation that combines multiple NMT engines. For production
-use, the v1.5 Standard Pipeline (`src/pipeline.py`) selects a fixed engine
+use, the v1.5 Standard Pipeline (`src/standard/pipeline.py`) selects a fixed engine
 sequence (Google + Niutrans) that we have validated end-to-end.
 """
 

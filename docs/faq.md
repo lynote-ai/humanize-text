@@ -17,7 +17,7 @@ Typically 10-30 seconds per text, depending on length. The LLM rewriting steps (
 
 ### Can I change the language chain?
 
-The current chain (Chinese → Japanese → German → Spanish) is optimized for English input. Changing it requires modifying `src/pipeline.py`. Different chains may produce different quality levels.
+The current chain (Chinese → Japanese → Finnish → English) is optimized for English input. Changing it requires modifying `src/standard/pipeline.py` or setting `[pipeline].intermediate_lang` in `config.toml`. Different chains may produce different quality levels.
 
 ### Why temperature 1.3?
 

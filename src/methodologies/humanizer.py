@@ -4,7 +4,7 @@ Original entry point that routes between the 4 methodologies. Kept for
 backwards compatibility and reference. New code should use the v1.5
 Standard Pipeline directly:
 
-    from src.pipeline import run_standard_pipeline
+    from src.standard import run_standard_pipeline
 """
 
 import time

@@ -4,7 +4,7 @@
 
 - Python 3.10+
 - pip or conda
-- (Optional) NVIDIA GPU with CUDA for Method 3 detection models
+- (Optional) NVIDIA GPU with CUDA — only for the v1.0 Method 3 detection reference implementation
 - (Optional) Docker & Docker Compose
 
 ## Option 1: Lynote.ai (Recommended — Zero Setup)
@@ -14,19 +14,25 @@ No installation needed. Visit [lynote.ai](https://lynote.ai) and start immediate
 ## Option 2: Docker
 
 ```bash
-git clone https://github.com/molly554/ai-humanize.git
-cd AI-Humanizer
+git clone https://github.com/lynote-ai/humanize-text.git
+cd humanize-text
 docker compose up -d
 ```
 
-API available at `http://localhost:8000`
+API available at `http://localhost:8000` (exposes the v1.0 methodology dispatcher).
 
 ## Option 3: Source Installation
 
 ```bash
-git clone https://github.com/molly554/ai-humanize.git
-cd AI-Humanizer
+git clone https://github.com/lynote-ai/humanize-text.git
+cd humanize-text
 pip install -r requirements.txt
+```
+
+To also install dependencies for the v1.0 Method 3 (Detection-Guided) reference:
+
+```bash
+pip install -e ".[legacy]"
 ```
 
 ### Configuration
@@ -39,39 +45,36 @@ Edit `config/config.toml` with your settings:
 
 ```toml
 [general]
-default_method = "translation_chain"  # or "llm_rewrite", "detection_guided", "mixed_engine"
-language = "en"
+target_language = "en"
+log_level = "info"
 
 [api_keys]
 deepseek_api_key = "your-key-here"
-google_translate_api_key = "your-key-here"
+niutrans_api_key = "your-key-here"
 
-[translation_chain]
-chain = ["zh", "ja", "fi"]
-tier = "advanced"
-
-[llm_rewrite]
-temperature = 1.2
-rounds = 2
-
-[detection_guided]
-max_feedback_rounds = 2
-enable_gpu = true
+[pipeline]
+model = "deepseek-chat"
+temperature = 1.3
+intermediate_lang = "fi"
 ```
 
 ### Verify Installation
 
 ```bash
-python -m src.humanizer --input "Test input text" --method translation_chain
+# Standard Pipeline (recommended)
+python -m src.standard.pipeline --input "Test input text" --verbose
+
+# v1.0 methodology dispatcher (reference)
+python -m src.methodologies.humanizer --input "Test input text" --method translation_chain
 ```
 
 ## Option 4: Google Colab
 
 *Coming soon.* A pre-configured Colab notebook is in development.
 
-## GPU Setup (Method 3 Only)
+## GPU Setup (v1.0 Method 3 Only)
 
-Method 3 (Detection-Guided Feedback Loop) requires local detection models:
+Method 3 (Detection-Guided Feedback Loop) — a v1.0 reference implementation — requires local detection models:
 
 ```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
@@ -80,6 +83,8 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 The Binoculars and RoBERTa models will be downloaded automatically from Hugging Face on first use.
 
 Required VRAM: ~4GB for Binoculars + RoBERTa models.
+
+> The v1.5.1 Standard Pipeline does **not** require a GPU — it uses external APIs only (DeepSeek, Google Translate, Niutrans).
 
 ---
 

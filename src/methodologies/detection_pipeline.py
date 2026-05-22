@@ -3,7 +3,7 @@
 Reference implementation of detector-in-the-loop rewriting. The detector
 modules under `detectors/` are simplified educational versions, not the
 full published research implementations. For production use, see the v1.5
-Standard Pipeline (`src/pipeline.py`).
+Standard Pipeline (`src/standard/pipeline.py`).
 """
 
 import re

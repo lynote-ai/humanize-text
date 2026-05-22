@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="humanize-text",
-    version="1.5.1",
+    version="1.5.2",
     description="Production-ready AI text humanization pipeline (DeepSeek + multi-engine translation chain)",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
@@ -35,7 +35,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "humanize-text=src.pipeline:main",
+            "humanize-text=src.standard.pipeline:main",
         ],
     },
     classifiers=[

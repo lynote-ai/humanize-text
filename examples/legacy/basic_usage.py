@@ -1,6 +1,9 @@
-"""Basic usage example for AI-Humanizer."""
+"""Basic usage example for the v1.0 methodology dispatcher (reference).
 
-from src.humanizer import Humanizer
+For the v1.5.1 production Standard Pipeline, see `examples/example_usage.py`.
+"""
+
+from src.methodologies.humanizer import Humanizer
 
 h = Humanizer(config_path="config/config.toml")
 

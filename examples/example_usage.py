@@ -1,7 +1,7 @@
 """Example: Run the Standard humanization pipeline."""
 
 import toml
-from src.pipeline import run_standard_pipeline
+from src.standard import run_standard_pipeline
 
 config = toml.load("config/config.toml")
 

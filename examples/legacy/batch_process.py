@@ -1,12 +1,15 @@
-"""Batch processing example for AI-Humanizer."""
+"""Batch processing example for the v1.0 methodology dispatcher (reference).
+
+For the v1.5.1 production Standard Pipeline, see `examples/example_usage.py`.
+"""
 
 import os
-from src.humanizer import Humanizer
+from src.methodologies.humanizer import Humanizer
 
 h = Humanizer(config_path="config/config.toml")
 
-input_dir = "examples/comparison"
-output_dir = "examples/outputs"
+input_dir = "examples/legacy/comparison"
+output_dir = "examples/legacy/outputs"
 os.makedirs(output_dir, exist_ok=True)
 
 for filename in os.listdir(input_dir):

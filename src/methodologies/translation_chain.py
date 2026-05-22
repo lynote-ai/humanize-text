@@ -1,8 +1,8 @@
 """Method 1: Multi-Language Translation Chain (v1.0 reference implementation).
 
 This is one of the four original methodologies. For production use, the v1.5
-Standard Pipeline (`src/pipeline.py`) integrates this method with Method 2
-(LLM Rewriting) into a fixed, validated 5-step chain.
+Standard Pipeline (`src/standard/pipeline.py`) integrates this method with
+Method 2 (LLM Rewriting) into a fixed, validated 4-step chain.
 """
 
 from deep_translator import GoogleTranslator, MyMemoryTranslator

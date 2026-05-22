@@ -56,7 +56,7 @@ cp config/config.example.toml config/config.toml
 # Fill in deepseek_api_key and niutrans_api_key
 
 # Run on any sample's original text
-python -m src.pipeline \
+python -m src.standard.pipeline \
   --input "Quantum computing has been proposed as..." \
   --target en \
   --verbose

@@ -1,8 +1,8 @@
 # Legacy Examples (v1.0)
 
 These examples target the **v1.0 four-methodology reference implementations**
-(`src/humanizer.py`, `src/translation_chain.py`, `src/detection_pipeline.py`,
-`src/mixed_engine.py`). They are kept for users studying the original
+(`src/methodologies/humanizer.py`, `src/methodologies/translation_chain.py`,
+`src/methodologies/detection_pipeline.py`, `src/methodologies/mixed_engine.py`). They are kept for users studying the original
 methodologies.
 
 For the **v1.5.1 production Standard Pipeline**, see:

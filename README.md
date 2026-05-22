@@ -39,7 +39,7 @@ Input (EN) → Chinese (DeepSeek) → Japanese (DeepSeek) → Finnish (Google) �
 - 100% key information retention (verified on 50 text pairs)
 - Expert quality score: 9.1/10
 
-> The 4 underlying methodologies remain in `src/` as reference implementations for research and customization. The Standard Pipeline (`src/pipeline.py`) is the recommended production path.
+> The 4 underlying methodologies live in `src/methodologies/` as reference implementations for research and customization. The Standard Pipeline (`src/standard/pipeline.py`) is the recommended production path.
 
 > **Want higher bypass rates + all methods combined?**
 > [Lynote.ai](https://lynote.ai) fuses Standard + Advanced + Focus pipelines into one intelligent system — auto-selects the optimal approach for each passage.
@@ -112,7 +112,7 @@ cd humanize-text
 pip install -r requirements.txt
 cp config/config.example.toml config/config.toml
 # Fill in your API keys in config.toml
-python -m src.pipeline --input "Your AI-generated text here"
+python -m src.standard.pipeline --input "Your AI-generated text here"
 ```
 
 ### n8n Workflow
@@ -182,15 +182,25 @@ Tested on 50 text pairs with expert evaluation:
 
 ```
 src/
-├── pipeline.py          # v1.5 Standard Pipeline (recommended, production)
-├── llm_rewriter.py      # DeepSeek rewriter used by Standard Pipeline
-├── translators.py       # Google + Niutrans engines
+├── standard/                # ★ v1.5.1 production Standard Pipeline (recommended)
+│   ├── pipeline.py          # 4-step chain, CLI entry
+│   ├── llm_rewriter.py      # DeepSeek humanization rewrite
+│   └── translators.py       # Google + Niutrans engines
 │
-├── translation_chain.py # v1.0 Method 1 — reference implementation
-├── humanizer.py         # v1.0 Method 2 entry — reference implementation
-├── detection_pipeline.py# v1.0 Method 3 — reference implementation
-├── mixed_engine.py      # v1.0 Method 4 — reference implementation
-└── detectors/           # v1.0 Method 3 detectors — reference
+└── methodologies/           # v1.0 four-methodology reference implementations
+    ├── humanizer.py         # v1.0 dispatcher + FastAPI app
+    ├── translation_chain.py # Method 1
+    ├── llm_rewriter.py      # Method 2
+    ├── detection_pipeline.py# Method 3
+    ├── mixed_engine.py      # Method 4
+    ├── postprocess.py
+    ├── detectors/           # Method 3 detectors
+    └── utils/
+
+examples/
+├── example_usage.py         # ★ v1.5.1 minimal entry
+├── showcase/                # ★ 5 real samples with intermediate-step outputs
+└── legacy/                  # v1.0 examples + 4-method comparison outputs
 ```
 
 ---
