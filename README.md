@@ -54,10 +54,10 @@ Input (EN) → Chinese (DeepSeek) → Japanese (DeepSeek) → Finnish (Google) �
 
 | Step | Engine | From → To | Purpose |
 |------|--------|-----------|---------|
-| 1 | DeepSeek (temp 1.3) | Input → Chinese (中文改写) | LLM humanization rewrite + language shift |
-| 2 | DeepSeek (temp 1.3) | Chinese → Japanese (日语改写) | Second LLM humanization, carries Step 1 as history |
-| 3 | Google Translate | Japanese → Finnish (一轮翻译) | First translation hop — distant language structural disruption |
-| 4 | Niutrans | Finnish → English (二轮翻译) | Second translation hop — cross-engine reconstruction |
+| 1 | DeepSeek (temp 1.3) | Input → Chinese (Chinese Rewriting) | LLM humanization rewrite + language shift |
+| 2 | DeepSeek (temp 1.3) | Chinese → Japanese (Japanese Rewriting) | Second LLM humanization, carries Step 1 as history |
+| 3 | Google Translate | Japanese → Finnish (First Round of Translation) | First translation hop — distant language structural disruption |
+| 4 | Niutrans | Finnish → English (Second-Round Translation) | Second translation hop — cross-engine reconstruction |
 
 ### Why This Chain Works
 
