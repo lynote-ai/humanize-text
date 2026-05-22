@@ -1,4 +1,10 @@
-"""Method 3: Detection-Guided Feedback Loop."""
+"""Method 3: Detection-Guided Feedback Loop (v1.0 reference implementation).
+
+Reference implementation of detector-in-the-loop rewriting. The detector
+modules under `detectors/` are simplified educational versions, not the
+full published research implementations. For production use, see the v1.5
+Standard Pipeline (`src/pipeline.py`).
+"""
 
 import re
 from .detectors.binoculars import BinocularsDetector

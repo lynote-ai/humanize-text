@@ -1,4 +1,6 @@
-# Standard Pipeline — Technical Details
+# Standard Pipeline (v1.5) — Production Path
+
+> **Positioning:** The Standard Pipeline is the **production-grade integration** added in v1.5. It combines Method 1 (Translation Chain) and Method 2 (LLM Rewriting) from the [4 methodologies](techniques.md) into a fixed, validated 5-step chain. This is the recommended path for actual use.
 
 ## Architecture
 

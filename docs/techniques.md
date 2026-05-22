@@ -1,8 +1,12 @@
-# AI Humanization Techniques — Deep Dive
+# AI Humanization Methodologies (v1.0) — Reference
 
-This document provides a detailed technical explanation of the 4 humanization approaches implemented in this toolkit.
+> **Positioning:** This document covers the **4 humanization methodologies** we originally explored in v1.0. They remain in `src/` as **reference implementations** for research, education, and customization.
+>
+> For the **production path**, see the [Standard Pipeline](pipeline.md) added in v1.5 — it integrates Method 1 (Translation Chain) + Method 2 (LLM Rewriting) into a fixed 5-step chain we actually run.
+>
+> For the **complete solution** (Standard + Advanced + Focus tiers, auto-selected per passage), see [Lynote.ai](https://lynote.ai).
 
-> **Looking for production-ready results?** [Lynote.ai](https://lynote.ai) intelligently combines all methods below, automatically selecting the optimal approach for each passage. [Try it free →](https://lynote.ai)
+This document provides a detailed technical explanation of the 4 humanization methodologies.
 
 ---
 

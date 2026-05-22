@@ -18,11 +18,14 @@
 
 ## What is Humanize-Text?
 
-A **production-ready** AI text humanization toolkit that transforms AI-generated text into natural, human-like writing through a multi-language translation chain. This is the actual working pipeline — not a demo.
+An AI text humanization toolkit. This repo evolved through two stages:
 
-### v1.5 — Standard Pipeline
+- **v1.0** — Documented **4 humanization methodologies** as reference implementations (translation chain, multi-turn LLM rewriting, detection-guided feedback loop, mixed-engine translation). See [docs/techniques.md](docs/techniques.md).
+- **v1.5 (current)** — Added the **Standard Pipeline**: a production-grade integration of Method 1 (Translation Chain) + Method 2 (LLM Rewriting), fixed as a 5-step chain we actually run and recommend.
 
-The Standard pipeline preserves the original writing style while routing text through a 5-step multi-language chain with LLM-powered humanization at key stages.
+### v1.5 — Standard Pipeline (Recommended)
+
+The Standard Pipeline preserves the original writing style while routing text through a 5-step multi-language chain with LLM-powered humanization at key stages.
 
 ```
 Input (EN) → Chinese (LLM Rewrite) → Japanese (LLM Rewrite) → German (Google) → Spanish (Niutrans) → Target Language (Niutrans)
@@ -33,6 +36,8 @@ Input (EN) → Chinese (LLM Rewrite) → Japanese (LLM Rewrite) → German (Goog
 - Fast processing speed
 - 100% key information retention (verified on 50 text pairs)
 - Expert quality score: 9.1/10
+
+> The 4 underlying methodologies remain in `src/` as reference implementations for research and customization. The Standard Pipeline (`src/pipeline.py`) is the recommended production path.
 
 > **Want higher bypass rates + all methods combined?**
 > [Lynote.ai](https://lynote.ai) fuses Standard + Advanced + Focus pipelines into one intelligent system — auto-selects the optimal approach for each passage.
@@ -149,10 +154,27 @@ Tested on 50 text pairs with expert evaluation:
 
 ## Documentation
 
-- [Pipeline Technical Details](docs/pipeline.md)
+- [Standard Pipeline Technical Details](docs/pipeline.md) — v1.5 production pipeline
+- [4 Methodologies Reference](docs/techniques.md) — v1.0 underlying methods
 - [Configuration Guide](docs/configuration.md)
 - [n8n Workflow Guide](docs/n8n-guide.md)
+- [Lynote.ai vs Open Source Comparison](docs/lynote-comparison.md)
 - [FAQ](docs/faq.md)
+
+### Repo Structure
+
+```
+src/
+├── pipeline.py          # v1.5 Standard Pipeline (recommended, production)
+├── llm_rewriter.py      # DeepSeek rewriter used by Standard Pipeline
+├── translators.py       # Google + Niutrans engines
+│
+├── translation_chain.py # v1.0 Method 1 — reference implementation
+├── humanizer.py         # v1.0 Method 2 entry — reference implementation
+├── detection_pipeline.py# v1.0 Method 3 — reference implementation
+├── mixed_engine.py      # v1.0 Method 4 — reference implementation
+└── detectors/           # v1.0 Method 3 detectors — reference
+```
 
 ---
 
