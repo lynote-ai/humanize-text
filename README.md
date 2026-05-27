@@ -1,4 +1,4 @@
-## Lynote Humanize Text: Open-source toolkit to rewrite AI-generated content into natural
+## Free Humanize Text: Open-source toolkit to rewrite AI-generated content into natural
 <p align="center">
   <img src="presentation/banner.png" alt="Humanize-Text" width="600"/>
 </p>
