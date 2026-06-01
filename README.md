@@ -232,8 +232,4 @@ MIT License. See [LICENSE](LICENSE) for details.
   </a>
 </p>
 
----
 
-<p align="center">
-  <b>If this project helps you, please give it a ⭐!</b>
-</p>
