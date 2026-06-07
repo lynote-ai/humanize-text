@@ -23,6 +23,9 @@ setup(
         "click>=8.1.0",
         "rich>=13.7.0",
         "deep-translator>=1.11.0",
+        "fastapi>=0.109.0",
+        "uvicorn[standard]>=0.27.0",
+        "pydantic>=2.0.0",
     ],
     extras_require={
         "legacy": [

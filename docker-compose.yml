@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  ai-humanizer:
+  api:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/Dockerfile.api
     ports:
       - "8000:8000"
     volumes:
@@ -12,3 +12,12 @@ services:
     environment:
       - CONFIG_PATH=/app/config/config.toml
     restart: unless-stopped
+
+  cli:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.cli
+    volumes:
+      - ./config:/app/config
+    profiles:
+      - cli

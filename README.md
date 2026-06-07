@@ -103,6 +103,7 @@ The Standard pipeline above is **one of three tiers** available. Each has differ
 |--------|-------------|-----|
 | Lynote.ai | Everyone — all tiers, zero setup | Visit lynote.ai|
 | n8n Workflow | No-code automation users | Import [`n8n/humanize_standard.json`](n8n/humanize_standard.json) |
+| REST API | Integrations, services | `docker compose up api` or `--serve` |
 | Python Script | Developers | See below |
 
 ### Python
@@ -115,6 +116,21 @@ cp config/config.example.toml config/config.toml
 # Fill in your API keys in config.toml
 python -m src.standard.pipeline --input "Your AI-generated text here"
 ```
+
+### REST API
+
+```bash
+# Local server
+python -m src.standard.pipeline --serve
+
+# Or via Docker
+docker compose up api -d
+curl -X POST http://localhost:8000/humanize \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Your AI-generated text here"}'
+```
+
+See [API Reference](docs/api-reference.md) for full endpoint documentation.
 
 ### n8n Workflow
 
@@ -185,6 +201,7 @@ Tested on 50 text pairs with expert evaluation:
 src/
 ├── standard/                # ★ v1.5.1 production Standard Pipeline (recommended)
 │   ├── pipeline.py          # 4-step chain, CLI entry
+│   ├── api.py               # FastAPI server (POST /humanize, GET /health)
 │   ├── llm_rewriter.py      # DeepSeek humanization rewrite
 │   └── translators.py       # Google + Niutrans engines
 │

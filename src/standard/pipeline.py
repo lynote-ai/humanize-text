@@ -109,14 +109,24 @@ def _lang_code_to_niutrans(code: str) -> str:
 
 
 @click.command()
-@click.option("--input", "input_text", required=True, help="Input text or path to text file")
+@click.option("--input", "input_text", default=None, help="Input text or path to text file")
 @click.option("--target", default="en", help="Target language code (default: en)")
 @click.option("--config", default="config/config.toml", help="Config file path")
 @click.option("--output", default=None, help="Output file path")
 @click.option("--verbose", is_flag=True, help="Show step-by-step progress")
-def main(input_text, target, config, output, verbose):
+@click.option("--serve", is_flag=True, help="Start API server on port 8000")
+def main(input_text, target, config, output, verbose, serve):
     """Run the Standard humanization pipeline."""
     import os
+
+    if serve:
+        import uvicorn
+        from .api import app
+        uvicorn.run(app, host="0.0.0.0", port=8000)
+        return
+
+    if not input_text:
+        raise click.UsageError("--input is required unless --serve is used")
 
     if os.path.isfile(input_text):
         with open(input_text, "r", encoding="utf-8") as f:
