@@ -13,13 +13,22 @@ No installation needed. Visit [lynote.ai](https://lynote.ai) and start immediate
 
 ## Option 2: Docker
 
+Two Docker images are available: **API server** and **CLI**.
+
 ```bash
 git clone https://github.com/lynote-ai/humanize-text.git
 cd humanize-text
-docker compose up -d
+cp config/config.example.toml config/config.toml
+# Fill in your API keys in config/config.toml
+
+# Start the API server (Standard Pipeline on port 8000)
+docker compose up api -d
+
+# Or run a one-off CLI command
+docker compose run --rm cli --input "Your AI-generated text here"
 ```
 
-API available at `http://localhost:8000` (exposes the v1.0 methodology dispatcher).
+API available at `http://localhost:8000` — exposes the Standard Pipeline (`POST /humanize`, `GET /health`).
 
 ## Option 3: Source Installation
 
@@ -61,8 +70,12 @@ intermediate_lang = "fi"
 ### Verify Installation
 
 ```bash
-# Standard Pipeline (recommended)
+# Standard Pipeline CLI (recommended)
 python -m src.standard.pipeline --input "Test input text" --verbose
+
+# Standard Pipeline API server
+python -m src.standard.pipeline --serve
+# In another terminal: curl http://localhost:8000/health
 
 # v1.0 methodology dispatcher (reference)
 python -m src.methodologies.humanizer --input "Test input text" --method translation_chain

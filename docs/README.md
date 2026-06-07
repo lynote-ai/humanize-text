@@ -29,6 +29,9 @@
 New to this repo?
   → Read installation.md → pipeline.md → try examples/example_usage.py
 
+Want a REST API?
+  → Read api-reference.md → docker compose up api (or python -m src.standard.pipeline --serve)
+
 Want to understand the science?
   → Read techniques.md → examples/showcase/ (real step-by-step traces)
 
