@@ -53,6 +53,7 @@ def run_standard_pipeline(text: str, config: dict, target_lang: str = "en") -> d
         history=None,
         temperature=llm["temperature"],
         extra_headers=llm["extra_headers"],
+        provider=llm["provider"],
     )
     steps.append({
         "step": 1, "engine": engine_name,
@@ -70,6 +71,7 @@ def run_standard_pipeline(text: str, config: dict, target_lang: str = "en") -> d
         history={"input": text, "output": step1},
         temperature=llm["temperature"],
         extra_headers=llm["extra_headers"],
+        provider=llm["provider"],
     )
     steps.append({
         "step": 2, "engine": engine_name,
