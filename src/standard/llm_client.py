@@ -20,6 +20,12 @@ PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
         "api_key_field": "openrouter_api_key",
         "display_name": "OpenRouter",
     },
+    "litellm": {
+        "base_url": "",
+        "model": "deepseek/deepseek-chat",
+        "api_key_field": "litellm_api_key",
+        "display_name": "LiteLLM",
+    },
 }
 
 DEFAULT_PROVIDER = "deepseek"
@@ -71,7 +77,7 @@ def resolve_llm_config(config: dict) -> dict[str, Any]:
     elif provider == "deepseek" and (ds_key := os.environ.get("DEEPSEEK_API_KEY")):
         api_key = ds_key
 
-    if not api_key:
+    if not api_key and provider != "litellm":
         raise ValueError(
             f"Missing API key for provider {provider!r}. "
             f"Set api_keys.{api_key_field} in config or LLM_API_KEY env var."
@@ -104,8 +110,19 @@ def chat_completions(
     top_p: float | None = None,
     timeout: int = 120,
     extra_headers: dict | None = None,
+    provider: str | None = None,
 ) -> str:
     """Call an OpenAI-compatible /chat/completions endpoint."""
+    if provider == "litellm":
+        return _litellm_chat_completions(
+            messages,
+            api_key=api_key,
+            model=model,
+            temperature=temperature,
+            top_p=top_p,
+            timeout=timeout,
+        )
+
     if not api_key:
         raise ValueError("API key is required for LLM chat completions.")
 
@@ -125,3 +142,31 @@ def chat_completions(
     response = httpx.post(url, headers=headers, json=payload, timeout=timeout)
     response.raise_for_status()
     return response.json()["choices"][0]["message"]["content"].strip()
+
+
+def _litellm_chat_completions(
+    messages: list[dict],
+    *,
+    api_key: str,
+    model: str,
+    temperature: float = 1.3,
+    top_p: float | None = None,
+    timeout: int = 120,
+) -> str:
+    """Route through LiteLLM SDK for 100+ provider support."""
+    import litellm
+
+    kwargs: dict[str, Any] = {
+        "model": model,
+        "messages": messages,
+        "temperature": temperature,
+        "drop_params": True,
+        "timeout": timeout,
+    }
+    if api_key:
+        kwargs["api_key"] = api_key
+    if top_p is not None:
+        kwargs["top_p"] = top_p
+
+    response = litellm.completion(**kwargs)
+    return response.choices[0].message.content.strip()

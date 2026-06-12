@@ -18,6 +18,7 @@ def llm_rewrite(
     history: dict | None = None,
     temperature: float = 1.3,
     extra_headers: dict | None = None,
+    provider: str | None = None,
 ) -> str:
     """Rewrite text into target language with humanization.
 
@@ -57,6 +58,7 @@ def llm_rewrite(
         model=model,
         temperature=temperature,
         extra_headers=extra_headers,
+        provider=provider,
     )
 
 

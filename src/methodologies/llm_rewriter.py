@@ -34,6 +34,7 @@ class LLMRewriteProcessor:
         self.model = llm["model"]
         self.temperature = llm["temperature"]
         self.extra_headers = llm["extra_headers"]
+        self.provider = llm["provider"]
         self.top_p = self.config.get("top_p", 0.9)
         self.rounds = self.config.get("rounds", 2)
 
@@ -50,6 +51,7 @@ class LLMRewriteProcessor:
             top_p=self.top_p,
             timeout=60,
             extra_headers=self.extra_headers,
+            provider=self.provider,
         )
 
     def process(self, text: str, **kwargs) -> str:
