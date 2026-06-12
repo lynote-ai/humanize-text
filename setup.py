@@ -25,6 +25,9 @@ setup(
         "deep-translator>=1.11.0",
     ],
     extras_require={
+        "litellm": [
+            "litellm>=1.80.0,<1.87.0",
+        ],
         "legacy": [
             # v1.0 methodology reference implementations (Method 3 detectors)
             "transformers>=4.36.0",
