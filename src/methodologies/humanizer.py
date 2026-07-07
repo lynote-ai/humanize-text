@@ -75,7 +75,7 @@ def api_humanize(req: HumanizeRequest):
     import os
     config_path = os.environ.get("CONFIG_PATH", "config/config.toml")
     h = Humanizer(config_path=config_path)
-    result = h.process(req.text, method=req.method, tier=req.tier)
+    result = h.process(req.text, method=req.method, tier=req.tier, language=req.language)
     return {
         "result": result.text,
         "method": result.method_used,
