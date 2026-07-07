@@ -7,6 +7,7 @@ Standard Pipeline directly:
     from src.standard import run_standard_pipeline
 """
 
+import os
 import time
 from dataclasses import dataclass
 
@@ -14,6 +15,8 @@ import click
 import toml
 import uvicorn
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from .translation_chain import TranslationChainProcessor
@@ -72,7 +75,6 @@ class HumanizeRequest(BaseModel):
 
 @app.post("/humanize")
 def api_humanize(req: HumanizeRequest):
-    import os
     config_path = os.environ.get("CONFIG_PATH", "config/config.toml")
     h = Humanizer(config_path=config_path)
     result = h.process(req.text, method=req.method, tier=req.tier, language=req.language)
@@ -93,6 +95,18 @@ def api_health():
     return {"status": "ok"}
 
 
+# --- Static frontend (Svelte + Vite build output) ---
+
+STATIC_DIR = "/app/static"
+
+if os.path.isdir(STATIC_DIR):
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+    @app.get("/{full_path:path}")
+    def serve_spa(full_path: str):
+        return FileResponse(f"{STATIC_DIR}/index.html")
+
+
 # --- CLI ---
 
 @click.command()
@@ -108,7 +122,6 @@ def main(input_text, method, output, config, tier, language, serve):
         uvicorn.run(app, host="0.0.0.0", port=8000)
         return
 
-    import os
     if os.path.isfile(input_text):
         with open(input_text, "r", encoding="utf-8") as f:
             input_text = f.read()

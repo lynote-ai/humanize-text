@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ai-humanizer:
     build:
@@ -11,4 +9,28 @@ services:
       - ./config:/app/config
     environment:
       - CONFIG_PATH=/app/config/config.toml
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
     restart: unless-stopped
+
+  # Optional Option B: hot-reload Vite dev server inside Docker.
+  # Start with: docker compose --profile frontend up -d
+  frontend:
+    image: oven/bun:latest
+    working_dir: /app/frontend
+    profiles:
+      - frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app/frontend
+    environment:
+      # Point the Vite proxy at the backend service in the Docker network.
+      - API_HOST=http://ai-humanizer:8000
+    command: ["sh", "-c", "bun install && bun dev"]
+    depends_on:
+      - ai-humanizer
