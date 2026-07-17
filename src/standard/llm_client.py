@@ -20,6 +20,12 @@ PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
         "api_key_field": "openrouter_api_key",
         "display_name": "OpenRouter",
     },
+    "atlascloud": {
+        "base_url": "https://api.atlascloud.ai/v1",
+        "model": "qwen/qwen3.5-flash",
+        "api_key_field": "atlascloud_api_key",
+        "display_name": "Atlas Cloud",
+    },
     "litellm": {
         "base_url": "",
         "model": "deepseek/deepseek-chat",
@@ -76,6 +82,11 @@ def resolve_llm_config(config: dict) -> dict[str, Any]:
         api_key = or_key
     elif provider == "deepseek" and (ds_key := os.environ.get("DEEPSEEK_API_KEY")):
         api_key = ds_key
+    elif provider == "atlascloud" and (
+        atlas_key := os.environ.get("ATLASCLOUD_API_KEY")
+        or os.environ.get("ATLAS_CLOUD_API_KEY")
+    ):
+        api_key = atlas_key
 
     if not api_key and provider != "litellm":
         raise ValueError(

@@ -11,11 +11,13 @@ log_level = "info"
 deepseek_api_key = ""
 # OpenRouter API key (required when llm.provider = "openrouter")
 openrouter_api_key = ""
+# Atlas Cloud API key (required when llm.provider = "atlascloud")
+atlascloud_api_key = ""
 # Niutrans API key (required for Step 4: 二轮翻译)
 niutrans_api_key = ""
 
 [llm]
-# LLM provider: "deepseek" | "openrouter"
+# LLM provider: "deepseek" | "openrouter" | "atlascloud"
 provider = "deepseek"
 # Override API base URL (empty = provider default)
 base_url = ""

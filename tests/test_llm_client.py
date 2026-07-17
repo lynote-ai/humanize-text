@@ -41,6 +41,19 @@ def test_openrouter_provider():
     assert llm["display_name"] == "OpenRouter"
 
 
+def test_atlascloud_provider():
+    config = {
+        "api_keys": {"atlascloud_api_key": "ak-atlas-test"},
+        "llm": {"provider": "atlascloud"},
+    }
+    llm = resolve_llm_config(config)
+    assert llm["provider"] == "atlascloud"
+    assert llm["base_url"] == "https://api.atlascloud.ai/v1"
+    assert llm["model"] == "qwen/qwen3.5-flash"
+    assert llm["api_key"] == "ak-atlas-test"
+    assert llm["display_name"] == "Atlas Cloud"
+
+
 def test_base_url_override():
     config = {
         "api_keys": {"openrouter_api_key": "sk-or-test"},
@@ -87,6 +100,16 @@ def test_llm_api_key_env_overrides_provider_key(monkeypatch):
     monkeypatch.setenv("LLM_API_KEY", "generic-override")
     llm = resolve_llm_config(config)
     assert llm["api_key"] == "generic-override"
+
+
+def test_atlascloud_env_key(monkeypatch):
+    config = {
+        "api_keys": {},
+        "llm": {"provider": "atlascloud"},
+    }
+    monkeypatch.setenv("ATLASCLOUD_API_KEY", "env-atlas-key")
+    llm = resolve_llm_config(config)
+    assert llm["api_key"] == "env-atlas-key"
 
 
 def test_missing_api_key_raises():

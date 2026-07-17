@@ -62,7 +62,7 @@ Steps 1–2 use an OpenAI-compatible chat API configured in `config.toml` under 
 
 ```toml
 [llm]
-provider = "deepseek"     # or "openrouter"
+provider = "deepseek"     # "deepseek", "openrouter", or "atlascloud"
 base_url = ""             # empty = provider default; override for custom endpoints
 model = ""                # empty = provider default model
 temperature = 1.3
@@ -77,7 +77,7 @@ llm = resolve_llm_config(config)
 # llm["provider"], llm["base_url"], llm["model"], llm["api_key"], llm["display_name"]
 ```
 
-See [configuration.md](configuration.md) for API keys, OpenRouter model slugs, and env overrides (`LLM_PROVIDER`, `LLM_BASE_URL`, `OPENROUTER_API_KEY`, etc.).
+See [configuration.md](configuration.md) for API keys, provider model slugs, and env overrides (`LLM_PROVIDER`, `LLM_BASE_URL`, `OPENROUTER_API_KEY`, `ATLASCLOUD_API_KEY`, etc.).
 
 ---
 

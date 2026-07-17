@@ -141,6 +141,18 @@ provider = "openrouter"
 model = "deepseek/deepseek-chat"   # any OpenRouter model slug
 ```
 
+**Atlas Cloud:**
+
+```toml
+[api_keys]
+atlascloud_api_key = "ak-..."
+niutrans_api_key = "your-key"
+
+[llm]
+provider = "atlascloud"
+model = "qwen/qwen3.5-flash"
+```
+
 Override the API endpoint with `base_url` in `[llm]`, or via `LLM_BASE_URL` / `LLM_API_KEY` environment variables. Full reference: [docs/configuration.md](docs/configuration.md).
 
 ### n8n Workflow
@@ -249,6 +261,5 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 - [MoneyPrinterTurbo](https://github.com/harry0703/MoneyPrinterTurbo) — AI short video generator
 - [AiToEarn](https://github.com/yikart/AiToEarn) — AI content publishing tool
-
 
 
