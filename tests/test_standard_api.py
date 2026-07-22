@@ -38,6 +38,12 @@ app_title = "Test App"
 model = "fallback-model"
 temperature = 1.1
 intermediate_lang = "fi"
+step4_provider = "niutrans"
+
+[providers.libretranslate]
+base_url = "http://libre.example.com:5000"
+api_key = "secret-libre"
+timeout_sec = 30
 """,
         encoding="utf-8",
     )
@@ -56,7 +62,7 @@ def test_v1_config_redacts_api_keys(client: TestClient) -> None:
     assert response.status_code == 200
 
     data = response.json()
-    assert {"intermediate_lang", "provider", "model", "base_url", "temperature"}.issubset(data.keys())
+    assert { "intermediate_lang", "step4_provider", "provider", "model", "base_url", "libretranslate_base_url", "temperature", }.issubset(data.keys())
 
     # No API keys or secrets should be exposed anywhere in the response.
     response_text = response.text
@@ -68,6 +74,8 @@ def test_v1_config_redacts_api_keys(client: TestClient) -> None:
     assert data["model"] == "deepseek-chat"
     assert data["base_url"] == "https://api.deepseek.com"
     assert data["intermediate_lang"] == "fi"
+    assert data["step4_provider"] == "niutrans"
+    assert data["libretranslate_base_url"] == "http://libre.example.com:5000"
     assert data["temperature"] == 1.3
 
 

@@ -16,6 +16,8 @@ services:
       retries: 3
       start_period: 5s
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   # Optional Option B: hot-reload Vite dev server inside Docker.
   # Start with: docker compose --profile frontend up -d

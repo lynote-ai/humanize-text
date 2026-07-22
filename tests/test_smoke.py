@@ -29,12 +29,14 @@ def test_standard_package_public_surface():
         run_standard_pipeline,
         deepseek_rewrite,
         google_translate,
+        libretranslate_translate,
         niutrans_translate,
     )
-    # All four must be callable
+    # All five must be callable
     assert callable(run_standard_pipeline)
     assert callable(deepseek_rewrite)
     assert callable(google_translate)
+    assert callable(libretranslate_translate)
     assert callable(niutrans_translate)
 
 
@@ -77,6 +79,62 @@ def test_lang_code_mapping_known_codes():
 def test_lang_code_mapping_passthrough_for_unknown():
     from src.standard.pipeline import _lang_code_to_niutrans
     assert _lang_code_to_niutrans("xx") == "xx"
+
+
+def test_libretranslate_translate_returns_translated_text(monkeypatch):
+    from src.standard.translators import libretranslate_translate
+
+    class FakeResponse:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"translatedText": "Bonjour"}
+
+    def fake_post(url, json, timeout):
+        assert url == "http://localhost:5000/translate"
+        assert json["q"] == "Hello"
+        assert json["source"] == "en"
+        assert json["target"] == "fr"
+        assert json["format"] == "text"
+        assert "api_key" not in json
+        return FakeResponse()
+
+    monkeypatch.setattr("src.standard.translators.httpx.post", fake_post)
+    assert libretranslate_translate("Hello", "en", "fr", "http://localhost:5000") == "Bonjour"
+
+
+def test_libretranslate_translate_sends_api_key_when_provided(monkeypatch):
+    from src.standard.translators import libretranslate_translate
+
+    class FakeResponse:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"translatedText": "Hola"}
+
+    def fake_post(url, json, timeout):
+        assert json["api_key"] == "secret-key"
+        return FakeResponse()
+
+    monkeypatch.setattr("src.standard.translators.httpx.post", fake_post)
+    assert libretranslate_translate("Hello", "en", "es", "http://libre.example.com", api_key="secret-key") == "Hola"
+
+
+def test_libretranslate_translate_raises_on_missing_translated_text(monkeypatch):
+    from src.standard.translators import libretranslate_translate
+
+    class FakeResponse:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"error": "unsupported language pair"}
+
+    monkeypatch.setattr("src.standard.translators.httpx.post", lambda *args, **kwargs: FakeResponse())
+    with pytest.raises(RuntimeError, match="Unexpected LibreTranslate response"):
+        libretranslate_translate("Hello", "en", "xx", "http://localhost:5000")
 
 
 def test_split_text_respects_max_length():

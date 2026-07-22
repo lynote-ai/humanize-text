@@ -115,9 +115,11 @@ class HealthResponse(BaseModel):
 
 class ConfigResponse(BaseModel):
     intermediate_lang: str
+    step4_provider: str
     provider: str
     model: str
     base_url: str
+    libretranslate_base_url: str
     temperature: float
 
 
@@ -137,12 +139,15 @@ def v1_config():
     config = _load_config()
     llm = config.get("llm", {})
     pipeline = config.get("pipeline", {})
+    libre_cfg = config.get("providers", {}).get("libretranslate", {})
 
     return {
         "intermediate_lang": pipeline.get("intermediate_lang", "fi"),
+        "step4_provider": pipeline.get("step4_provider", "niutrans"),
         "provider": llm.get("provider", "deepseek"),
         "model": llm.get("model") or pipeline.get("model", "deepseek-chat"),
         "base_url": llm.get("base_url", ""),
+        "libretranslate_base_url": libre_cfg.get("base_url", ""),
         "temperature": llm.get("temperature", pipeline.get("temperature", 1.3)),
     }
 
