@@ -1,4 +1,4 @@
-## Free Humanize Text: Open-source toolkit to rewrite AI-generated content into natural
+## Best AI Humanizer: Open-source toolkit to rewrite AI-generated content into natural
 <p align="center">
   <img src="presentation/banner.png" alt="Humanize-Text" width="600"/>
 </p>
@@ -245,10 +245,12 @@ MIT License. See [LICENSE](LICENSE) for details.
 - [Lynote.ai — AI Humanization Platform](https://lynote.ai/ai-humanizer)
 - [Report a Bug](https://github.com/lynote-ai/humanize-text/issues)
 
-### Recommended Projects
 
-- [MoneyPrinterTurbo](https://github.com/harry0703/MoneyPrinterTurbo) — AI short video generator
-- [AiToEarn](https://github.com/yikart/AiToEarn) — AI content publishing tool
+## Support & Contact
+⭐ **Star this repository** if this all-in-one academic AI toolkit helps you, it helps more students discover this project.
 
+🌐 Visit official website [lynote.ai](https://lynote.ai) to unlock full premium features.
+
+💬 Have questions, feature requests or usage troubles? Feel free to start a discussion in [Discussions](https://github.com/lynote-ai/humanize-text/discussions).
 
 
