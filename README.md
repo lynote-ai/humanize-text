@@ -141,6 +141,18 @@ provider = "openrouter"
 model = "deepseek/deepseek-chat"   # any OpenRouter model slug
 ```
 
+**Atlas Cloud:**
+
+```toml
+[api_keys]
+atlascloud_api_key = "ak-..."
+niutrans_api_key = "your-key"
+
+[llm]
+provider = "atlascloud"
+model = "qwen/qwen3.5-flash"
+```
+
 Override the API endpoint with `base_url` in `[llm]`, or via `LLM_BASE_URL` / `LLM_API_KEY` environment variables. Full reference: [docs/configuration.md](docs/configuration.md).
 
 ### n8n Workflow
@@ -252,5 +264,4 @@ MIT License. See [LICENSE](LICENSE) for details.
 🌐 Visit official website [lynote.ai](https://lynote.ai) to unlock full premium features.
 
 💬 Have questions, feature requests or usage troubles? Feel free to start a discussion in [Discussions](https://github.com/lynote-ai/humanize-text/discussions).
-
 

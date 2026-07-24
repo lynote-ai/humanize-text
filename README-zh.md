@@ -156,6 +156,18 @@ provider = "openrouter"
 model = "deepseek/deepseek-chat"
 ```
 
+**Atlas Cloud：**
+
+```toml
+[api_keys]
+atlascloud_api_key = "ak-..."
+niutrans_api_key = "your-key"
+
+[llm]
+provider = "atlascloud"
+model = "qwen/qwen3.5-flash"
+```
+
 可通过 `[llm].base_url` 或环境变量 `LLM_BASE_URL` / `LLM_API_KEY` 覆盖 API 端点。完整说明见 [docs/configuration.md](docs/configuration.md)。
 
 ### n8n 工作流

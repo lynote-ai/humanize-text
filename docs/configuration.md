@@ -37,12 +37,26 @@ provider = "openrouter"
 model = "deepseek/deepseek-chat"   # or anthropic/claude-3.5-sonnet, etc.
 ```
 
+#### Atlas Cloud (optional)
+
+Atlas Cloud exposes LLMs through an OpenAI-compatible endpoint.
+
+```toml
+[api_keys]
+atlascloud_api_key = "ak-..."
+
+[llm]
+provider = "atlascloud"
+model = "qwen/qwen3.5-flash"
+```
+
 #### Provider defaults
 
 | Provider | Default `base_url` | Default `model` | Config key |
 |----------|-------------------|-----------------|------------|
 | `deepseek` | `https://api.deepseek.com` | `deepseek-chat` | `api_keys.deepseek_api_key` |
 | `openrouter` | `https://openrouter.ai/api/v1` | `deepseek/deepseek-chat` | `api_keys.openrouter_api_key` |
+| `atlascloud` | `https://api.atlascloud.ai/v1` | `qwen/qwen3.5-flash` | `api_keys.atlascloud_api_key` |
 
 Set `base_url` in `[llm]` to override the provider preset (e.g. a self-hosted OpenAI-compatible proxy). Leave empty to use the default for the selected provider.
 
@@ -73,10 +87,11 @@ log_level = "info"        # debug, info, warning, error
 [api_keys]
 deepseek_api_key = ""     # Required when llm.provider = "deepseek"
 openrouter_api_key = ""   # Required when llm.provider = "openrouter"
+atlascloud_api_key = ""   # Required when llm.provider = "atlascloud"
 niutrans_api_key = ""     # Required
 
 [llm]
-provider = "deepseek"     # "deepseek" | "openrouter"
+provider = "deepseek"     # "deepseek" | "openrouter" | "atlascloud"
 base_url = ""             # empty = provider default; set to override
 model = ""                # empty = provider default model
 temperature = 1.3         # 1.1-1.5 range (1.3 recommended)
@@ -95,11 +110,12 @@ Optional runtime overrides (take precedence over TOML):
 
 | Variable | Purpose |
 |----------|---------|
-| `LLM_PROVIDER` | `deepseek` or `openrouter` |
+| `LLM_PROVIDER` | `deepseek`, `openrouter`, or `atlascloud` |
 | `LLM_BASE_URL` | Override API base URL |
 | `LLM_API_KEY` | Generic API key override |
 | `OPENROUTER_API_KEY` | OpenRouter key when provider is `openrouter` |
 | `DEEPSEEK_API_KEY` | DeepSeek key when provider is `deepseek` |
+| `ATLASCLOUD_API_KEY` | Atlas Cloud key when provider is `atlascloud` |
 | `LLM_MODEL` | Override model slug |
 
 **Example — switch to OpenRouter via environment (no TOML edit):**
