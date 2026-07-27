@@ -3,6 +3,9 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+    # Security: API routes are currently unauthenticated.
+    # Do not expose this port to the public internet.
+    # Deploy behind a reverse proxy and restrict access with firewall/private network.
     ports:
       - "8000:8000"
     volumes:
