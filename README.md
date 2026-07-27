@@ -1,4 +1,24 @@
 ## Best AI Humanizer: Open-source toolkit to rewrite AI-generated content into natural
+
+A Python toolkit for text humanization. Two parts:
+
+**Reference implementations** — four documented approaches to
+humanizing machine-generated text: translation chaining, multi-turn
+LLM rewriting, detection-guided feedback loops, and mixed-engine
+translation. 
+
+**Standard Pipeline** — the configuration we actually run. Five steps:
+two LLM rewrite passes (the second carries the first as conversation
+history) followed by two NMT hops across different engines. The
+translation chain routes through Chinese → Japanese → Finnish before
+returning to English, maximizing linguistic distance at each hop so
+that no single engine's structural fingerprint survives.
+
+**Note on intended use.** This toolkit is for improving the readability
+and natural cadence of AI-assisted drafts. If you are writing in an
+academic setting, follow your institution's policies on AI use and
+disclosure.
+
 <p align="center">
   <img src="presentation/banner.png" alt="Humanize-Text" width="600"/>
 </p>
