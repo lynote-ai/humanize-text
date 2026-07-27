@@ -25,6 +25,11 @@ setup(
         "deep-translator>=1.11.0",
     ],
     extras_require={
+        "api": [
+            "fastapi>=0.109.0",
+            "uvicorn[standard]>=0.27.0",
+            "pydantic>=2.0.0"
+        ],
         "litellm": [
             "litellm>=1.80.0,<1.87.0",
         ],
