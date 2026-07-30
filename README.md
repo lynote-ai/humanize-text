@@ -35,6 +35,9 @@ disclosure.
   English | <a href="README-zh.md">中文</a>
 </p>
 
+Other Quality Projects
+AI Text Detector:https://github.com/lynote-ai/ai-text-detector
+AI Image Detector:https://github.com/lynote-ai/ai-image-detector
 ---
 
 ## What is Humanize-Text?
