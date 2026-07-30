@@ -19,6 +19,10 @@ and natural cadence of AI-assisted drafts. If you are writing in an
 academic setting, follow your institution's policies on AI use and
 disclosure.
 
+**Other Quality Projects**</br>
+AI Text Detector:https://github.com/lynote-ai/ai-text-detector</br>
+AI Image Detector:https://github.com/lynote-ai/ai-image-detector</br>
+
 <p align="center">
   <img src="presentation/banner.png" alt="Humanize-Text" width="600"/>
 </p>
@@ -35,9 +39,6 @@ disclosure.
   English | <a href="README-zh.md">中文</a>
 </p>
 
-Other Quality Projects
-AI Text Detector:https://github.com/lynote-ai/ai-text-detector
-AI Image Detector:https://github.com/lynote-ai/ai-image-detector
 ---
 
 ## What is Humanize-Text?
