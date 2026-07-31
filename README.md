@@ -68,7 +68,7 @@ LLM steps use **DeepSeek** (default) or **[OpenRouter](https://openrouter.ai)** 
 
 > The 4 underlying methodologies live in `src/methodologies/` as reference implementations for research and customization. The Standard Pipeline (`src/standard/pipeline.py`) is the recommended production path.
 
-> **Want higher bypass rates + all methods combined?**
+> **Want higher broader coverage + all methods combined?**
 > Lynote.ai fuses Standard + Advanced + Focus pipelines into one intelligent system — auto-selects the optimal approach for each passage.
 >
 > **[Try Lynote.ai Free →](https://lynote.ai)**
@@ -283,7 +283,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 
 ## Support & Contact
-⭐ **Star this repository** if this all-in-one academic AI toolkit helps you, it helps more students discover this project.
+⭐ **Star this repository** if this all-in-one text humanization toolkit helps you.
 
 🌐 Visit official website [lynote.ai](https://lynote.ai) to unlock full premium features.
 
