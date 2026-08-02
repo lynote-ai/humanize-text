@@ -38,3 +38,11 @@ temperature = 1.3
 # restructuring before reconstruction to the target language.
 # Other tested options: "de" (German), "ko" (Korean)
 intermediate_lang = "fi"
+# Step 4 provider: "niutrans" | "libretranslate"
+step4_provider = "niutrans"
+
+[providers.libretranslate]
+# Self-hosted LibreTranslate endpoint (used when pipeline.step4_provider = "libretranslate")
+base_url = "http://host.docker.internal:5000"
+api_key = ""
+timeout_sec = 60

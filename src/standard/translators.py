@@ -58,6 +58,46 @@ def niutrans_translate(text: str, source: str, target: str, api_key: str) -> str
         raise RuntimeError(f"Unexpected Niutrans response: {data}")
 
 
+def libretranslate_translate(
+    text: str,
+    source: str,
+    target: str,
+    base_url: str,
+    api_key: str = "",
+    timeout: int = 60,
+) -> str:
+    """Translate text using a self-hosted LibreTranslate instance.
+
+    Args:
+        text: Text to translate.
+        source: Source language code.
+        target: Target language code.
+        base_url: LibreTranslate base URL (e.g. http://localhost:5000).
+        api_key: Optional LibreTranslate API key.
+        timeout: Request timeout in seconds.
+
+    Returns:
+        Translated text.
+    """
+    url = f"{base_url.rstrip('/')}/translate"
+    payload = {
+        "q": text,
+        "source": source,
+        "target": target,
+        "format": "text",
+    }
+    if api_key:
+        payload["api_key"] = api_key
+
+    response = httpx.post(url, json=payload, timeout=timeout)
+    response.raise_for_status()
+    data = response.json()
+
+    if isinstance(data, dict) and "translatedText" in data:
+        return data["translatedText"]
+    raise RuntimeError(f"Unexpected LibreTranslate response: {data}")
+
+
 def _split_text(text: str, max_len: int = 4500) -> list[str]:
     """Split text into chunks at sentence boundaries."""
     import re

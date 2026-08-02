@@ -17,7 +17,7 @@ import click
 import toml
 
 from .llm_client import resolve_llm_config
-from .translators import google_translate, niutrans_translate
+from .translators import google_translate, libretranslate_translate, niutrans_translate
 from .llm_rewriter import llm_rewrite
 
 
@@ -87,15 +87,32 @@ def run_standard_pipeline(text: str, config: dict, target_lang: str = "en") -> d
         "output": step3, "length": len(step3),
     })
 
-    # Step 4: Niutrans — intermediate language → target (second translation hop)
-    step4 = niutrans_translate(
-        step3,
-        source=intermediate_lang,
-        target=_lang_code_to_niutrans(target_lang),
-        api_key=niutrans_key,
-    )
+    # Step 4: configured provider (Niutrans or LibreTranslate) — intermediate language → target (second translation hop)
+    pipeline_cfg = config.get("pipeline", {})
+    step4_provider = pipeline_cfg.get("step4_provider", "niutrans")
+
+    if step4_provider == "libretranslate":
+        libre_cfg = config.get("providers", {}).get("libretranslate", {})
+        step4 = libretranslate_translate(
+            step3,
+            source=intermediate_lang,
+            target=target_lang,
+            base_url=libre_cfg.get("base_url", "http://localhost:5000"),
+            api_key=libre_cfg.get("api_key", ""),
+            timeout=libre_cfg.get("timeout_sec", 60),
+        )
+        step4_engine = "LibreTranslate"
+    else:
+        step4 = niutrans_translate(
+            step3,
+            source=intermediate_lang,
+            target=_lang_code_to_niutrans(target_lang),
+            api_key=niutrans_key,
+        )
+        step4_engine = "Niutrans"
+
     steps.append({
-        "step": 4, "engine": "Niutrans",
+        "step": 4, "engine": step4_engine,
         "direction": f"{intermediate_lang.upper()} → {target_lang.upper()} (二轮翻译)",
         "output": step4, "length": len(step4),
     })
