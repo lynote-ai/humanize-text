@@ -1,4 +1,4 @@
-## Best AI Humanizer: Open-source toolkit to rewrite AI-generated content into natural
+## Humanize Text: Open-source toolkit for more natural AI-assisted drafts
 
 A Python toolkit for text humanization. Two parts:
 
