@@ -19,6 +19,10 @@ and natural cadence of AI-assisted drafts. If you are writing in an
 academic setting, follow your institution's policies on AI use and
 disclosure.
 
+> **Important:** Detector scores are probabilistic. This project does not guarantee
+> that rewritten text will be classified as human, and it should not be used to
+> misrepresent authorship or evade institutional policies.
+
 **Other Quality Projects**</br>
 AI Text Detector:https://github.com/lynote-ai/ai-text-detector</br>
 AI Image Detector:https://github.com/lynote-ai/ai-image-detector</br>
