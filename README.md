@@ -7,7 +7,7 @@ humanizing machine-generated text: translation chaining, multi-turn
 LLM rewriting, detection-guided feedback loops, and mixed-engine
 translation. 
 
-**Standard Pipeline** — the configuration we actually run. Five steps:
+**Standard Pipeline** — the configuration we actually run. Four steps:
 two LLM rewrite passes (the second carries the first as conversation
 history) followed by two NMT hops across different engines. The
 translation chain routes through Chinese → Japanese → Finnish before
@@ -22,6 +22,12 @@ disclosure.
 > **Important:** Detector scores are probabilistic. This project does not guarantee
 > that rewritten text will be classified as human, and it should not be used to
 > misrepresent authorship or evade institutional policies.
+
+> **Where this repo fits.** The pipeline here is our team's open exploration from early 2026 — the most effective approach we'd found *at the time*, released so anyone can read it, run it, and build on it. We've since moved well beyond it: Lynote.ai now runs **proprietary detect + humanize models we trained ourselves**, using adversarial training on curated, high-quality datasets.
+>
+> **Against this repo's open-source chain, Lynote.ai's current humanizer raises the detector-bypass rate by ~30% and rates ~50% higher on output quality — both are relative gains over this chain, measured separately from the static 9.1/10 expert score reported below.** The detection side draws on the latest research into what actually separates human from AI writing — not surface style, but discourse-level *narrative* structure (e.g. the **[StoryScope](docs/research-notes.md)** study, UMD & Google DeepMind, COLM 2026). Style-only rewriting no longer tells the whole story — which is exactly why this open chain has a ceiling.
+>
+> **This repo stays a faithful, runnable reference. For the current best results, try [Lynote.ai](https://lynote.ai).**
 
 **Other Quality Projects**</br>
 AI Text Detector:https://github.com/lynote-ai/ai-text-detector</br>
@@ -50,7 +56,7 @@ AI Image Detector:https://github.com/lynote-ai/ai-image-detector</br>
 An AI text humanization toolkit. This repo evolved through two stages:
 
 - **v1.0** — Documented **4 humanization methodologies** as reference implementations (translation chain, multi-turn LLM rewriting, detection-guided feedback loop, mixed-engine translation). See [docs/techniques.md](docs/techniques.md).
-- **v1.5 (current)** — Added the **Standard Pipeline**: a production-grade integration of Method 1 (Translation Chain) + Method 2 (LLM Rewriting), fixed as a 5-step chain we actually run and recommend.
+- **v1.5 (current)** — Added the **Standard Pipeline**: a production-grade integration of Method 1 (Translation Chain) + Method 2 (LLM Rewriting), fixed as a 4-step chain we actually run and recommend.
 
 ### v1.5.1 — Standard Pipeline (Recommended)
 
@@ -65,14 +71,14 @@ LLM steps use **DeepSeek** (default) or **[OpenRouter](https://openrouter.ai)** 
 **See [`examples/showcase/`](examples/showcase/) for 5 real samples with full intermediate-step outputs and AI-detection verdicts.**
 
 **Characteristics:**
-- Best original style preservation among all approaches
+- Strong original style preservation
 - Fast processing speed
-- 100% key information retention (verified on 50 text pairs)
-- Expert quality score: 9.1/10
+- 100% key information retention on our 50-pair sample
+- Expert quality score: 9.1/10 (this repo's output)
 
 > The 4 underlying methodologies live in `src/methodologies/` as reference implementations for research and customization. The Standard Pipeline (`src/standard/pipeline.py`) is the recommended production path.
 
-> **Want higher broader coverage + all methods combined?**
+> **Want broader coverage + all methods combined?**
 > Lynote.ai fuses Standard + Advanced + Focus pipelines into one intelligent system — auto-selects the optimal approach for each passage.
 >
 > **[Try Lynote.ai Free →](https://lynote.ai)**
@@ -205,7 +211,7 @@ Override the API endpoint with `base_url` in `[llm]`, or via `LLM_BASE_URL` / `L
 
 ## Showcase — 5 Real Examples with Step-by-Step Outputs
 
-We ran the pipeline end-to-end on 5 real input texts and saved every intermediate step. All 5 final outputs were classified as `human` by the AI detector.
+We ran the pipeline end-to-end on 5 real input texts and saved every intermediate step. On these samples, all five final outputs were classified as `human` by the detector we tested. These are illustrative traces from the open chain, not a guarantee — detection is probabilistic and varies by detector and version (see the note at the top of this README).
 
 | # | Topic | Detection | Confidence |
 |---|-------|-----------|------------|
@@ -235,6 +241,8 @@ Tested on 50 text pairs with expert evaluation:
 - **Key Information Retention:** 100% (50/50 pairs)
 - All texts preserved original key information without distortion
 
+> These scores evaluate **this repo's** Standard Pipeline output only — a static quality measure, not the Lynote.ai relative gains referenced at the top.
+
 ---
 
 ## Comparison with Other Tiers
@@ -253,6 +261,7 @@ Tested on 50 text pairs with expert evaluation:
 
 - [Standard Pipeline Technical Details](docs/pipeline.md) — v1.5 production pipeline
 - [4 Methodologies Reference](docs/techniques.md) — v1.0 underlying methods
+- [Research Notes](docs/research-notes.md) — why style-only humanization has a ceiling (StoryScope, COLM 2026)
 - [Configuration Guide](docs/configuration.md)
 - [n8n Workflow Guide](docs/n8n-guide.md)
 - [Lynote.ai vs Open Source Comparison](docs/lynote-comparison.md)
