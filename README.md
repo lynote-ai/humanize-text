@@ -25,7 +25,7 @@ disclosure.
 
 > **Where this repo fits.** The pipeline here is our team's open exploration from early 2026 — the most effective approach we'd found *at the time*, released so anyone can read it, run it, and build on it. We've since moved well beyond it: Lynote.ai now runs **proprietary detect + humanize models we trained ourselves**, using adversarial training on curated, high-quality datasets.
 >
-> **Against this repo's open-source chain, Lynote.ai's current humanizer raises the detector-bypass rate by ~30% and rates ~50% higher on output quality — both are relative gains over this chain, measured separately from the static 9.1/10 expert score reported below.** The detection side draws on the latest research into what actually separates human from AI writing — not surface style, but discourse-level *narrative* structure (e.g. the **[StoryScope](docs/research-notes.md)** study, UMD & Google DeepMind, COLM 2026). Style-only rewriting no longer tells the whole story — which is exactly why this open chain has a ceiling.
+> **Against this repo's open-source chain, Lynote.ai's current humanizer raises the detector-bypass rate by ~30% and rates ~50% higher on output quality — both are relative gains over this chain.** The detection side draws on the latest research into what actually separates human from AI writing — not surface style, but discourse-level *narrative* structure (e.g. the **[StoryScope](docs/research-notes.md)** study, UMD & Google DeepMind, COLM 2026). Style-only rewriting no longer tells the whole story — which is exactly why this open chain has a ceiling.
 >
 > **This repo stays a faithful, runnable reference. For the current best results, try [Lynote.ai](https://lynote.ai).**
 
