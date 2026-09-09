@@ -54,6 +54,19 @@ def test_atlascloud_provider():
     assert llm["display_name"] == "Atlas Cloud"
 
 
+def test_orcarouter_provider():
+    config = {
+        "api_keys": {"orcarouter_api_key": "sk-orca-test"},
+        "llm": {"provider": "orcarouter"},
+    }
+    llm = resolve_llm_config(config)
+    assert llm["provider"] == "orcarouter"
+    assert llm["base_url"] == "https://api.orcarouter.ai/v1"
+    assert llm["model"] == "deepseek/deepseek-chat"
+    assert llm["api_key"] == "sk-orca-test"
+    assert llm["display_name"] == "OrcaRouter"
+
+
 def test_base_url_override():
     config = {
         "api_keys": {"openrouter_api_key": "sk-or-test"},
@@ -110,6 +123,16 @@ def test_atlascloud_env_key(monkeypatch):
     monkeypatch.setenv("ATLASCLOUD_API_KEY", "env-atlas-key")
     llm = resolve_llm_config(config)
     assert llm["api_key"] == "env-atlas-key"
+
+
+def test_orcarouter_env_key(monkeypatch):
+    config = {
+        "api_keys": {},
+        "llm": {"provider": "orcarouter"},
+    }
+    monkeypatch.setenv("ORCAROUTER_API_KEY", "env-orca-key")
+    llm = resolve_llm_config(config)
+    assert llm["api_key"] == "env-orca-key"
 
 
 def test_missing_api_key_raises():

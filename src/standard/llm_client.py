@@ -26,6 +26,12 @@ PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
         "api_key_field": "atlascloud_api_key",
         "display_name": "Atlas Cloud",
     },
+    "orcarouter": {
+        "base_url": "https://api.orcarouter.ai/v1",
+        "model": "deepseek/deepseek-chat",
+        "api_key_field": "orcarouter_api_key",
+        "display_name": "OrcaRouter",
+    },
     "litellm": {
         "base_url": "",
         "model": "deepseek/deepseek-chat",
@@ -87,6 +93,8 @@ def resolve_llm_config(config: dict) -> dict[str, Any]:
         or os.environ.get("ATLAS_CLOUD_API_KEY")
     ):
         api_key = atlas_key
+    elif provider == "orcarouter" and (or_key := os.environ.get("ORCAROUTER_API_KEY")):
+        api_key = or_key
 
     if not api_key and provider != "litellm":
         raise ValueError(
