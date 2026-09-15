@@ -21,6 +21,48 @@ from .translators import google_translate, niutrans_translate
 from .llm_rewriter import llm_rewrite
 
 
+
+
+def _validate_pipeline_config(config: dict, provider: str) -> None:
+    """Pre-flight check: validate all required keys exist and are non-empty.
+
+    Raises ValueError listing every missing config value so the operator
+    can fix them all at once instead of discovering them one step at a time.
+    Called before any API calls to avoid wasting LLM credits when a later
+    step would fail due to missing credentials.
+    """
+    errors = []
+
+    # Niutrans key (Step 4) — not validated by resolve_llm_config
+    niutrans_key = config.get("api_keys", {}).get("niutrans_api_key", "")
+    if not niutrans_key:
+        errors.append(
+            "niutrans_api_key is empty. "
+            "Set api_keys.niutrans_api_key in config.toml "
+            "(get a free key at niutrans.com)"
+        )
+
+    # Intermediate language sanity check
+    intermediate = config.get("pipeline", {}).get("intermediate_lang", "fi")
+    known_codes = {
+        "en", "zh", "ja", "ko", "fr", "de", "es", "pt",
+        "ru", "ar", "it", "nl", "fi",
+    }
+    if intermediate not in known_codes:
+        errors.append(
+            f"intermediate_lang={intermediate!r} is not a recognized "
+            f"language code. Known codes: {sorted(known_codes)}"
+        )
+
+    if errors:
+        raise ValueError(
+            "Pipeline config validation failed:
+  - "
+            + "
+  - ".join(errors)
+        )
+
+
 def run_standard_pipeline(text: str, config: dict, target_lang: str = "en") -> dict:
     """Run the Standard humanization pipeline.
 
@@ -36,6 +78,7 @@ def run_standard_pipeline(text: str, config: dict, target_lang: str = "en") -> d
             - 'processing_time_ms': total elapsed time in milliseconds
     """
     llm = resolve_llm_config(config)
+    _validate_pipeline_config(config, llm["provider"])
     niutrans_key = config["api_keys"]["niutrans_api_key"]
     intermediate_lang = config.get("pipeline", {}).get("intermediate_lang", "fi")
     engine_name = llm["display_name"]
