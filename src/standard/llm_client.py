@@ -7,6 +7,8 @@ from typing import Any
 
 import httpx
 
+from .retry import retry_with_backoff
+
 PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
     "deepseek": {
         "base_url": "https://api.deepseek.com",
@@ -158,9 +160,12 @@ def chat_completions(
     if top_p is not None:
         payload["top_p"] = top_p
 
-    response = httpx.post(url, headers=headers, json=payload, timeout=timeout)
-    response.raise_for_status()
-    return response.json()["choices"][0]["message"]["content"].strip()
+    def _call():
+        resp = httpx.post(url, headers=headers, json=payload, timeout=timeout)
+        resp.raise_for_status()
+        return resp.json()["choices"][0]["message"]["content"].strip()
+
+    return retry_with_backoff(_call)
 
 
 def _litellm_chat_completions(

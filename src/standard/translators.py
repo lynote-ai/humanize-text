@@ -1,6 +1,8 @@
 """Translation engines: Google Translate and Niutrans."""
 
 import httpx
+
+from .retry import retry_with_backoff
 from deep_translator import GoogleTranslator
 
 
@@ -37,18 +39,21 @@ def niutrans_translate(text: str, source: str, target: str, api_key: str) -> str
     Returns:
         Translated text.
     """
-    response = httpx.post(
-        "https://api.niutrans.com/NiuTransServer/translation",
-        json={
-            "from": source,
-            "to": target,
-            "apikey": api_key,
-            "src_text": text,
-        },
-        timeout=60,
-    )
-    response.raise_for_status()
-    data = response.json()
+    def _call():
+        resp = httpx.post(
+            "https://api.niutrans.com/NiuTransServer/translation",
+            json={
+                "from": source,
+                "to": target,
+                "apikey": api_key,
+                "src_text": text,
+            },
+            timeout=60,
+        )
+        resp.raise_for_status()
+        return resp.json()
+
+    data = retry_with_backoff(_call)
 
     if "tgt_text" in data:
         return data["tgt_text"]
