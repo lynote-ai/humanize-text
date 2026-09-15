@@ -12,6 +12,8 @@ This chain was selected after empirical testing against AI detectors on
 4 intermediate steps on 5 real samples.
 """
 
+import json
+import sys
 import time
 import click
 import toml
@@ -126,7 +128,8 @@ def _lang_code_to_niutrans(code: str) -> str:
 @click.option("--config", default="config/config.toml", help="Config file path")
 @click.option("--output", default=None, help="Output file path")
 @click.option("--verbose", is_flag=True, help="Show step-by-step progress")
-def main(input_text, target, config, output, verbose):
+@click.option("--json", "json_output", is_flag=True, help="Output full result as JSON (includes step traces)")
+def main(input_text, target, config, output, verbose, json_output):
     """Run the Standard humanization pipeline."""
     import os
 
