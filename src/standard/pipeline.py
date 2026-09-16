@@ -12,6 +12,7 @@ This chain was selected after empirical testing against AI detectors on
 4 intermediate steps on 5 real samples.
 """
 
+import json
 import time
 import click
 import toml
@@ -19,6 +20,39 @@ import toml
 from .llm_client import resolve_llm_config
 from .translators import google_translate, niutrans_translate
 from .llm_rewriter import llm_rewrite
+
+
+def _validate_pipeline_config(config: dict) -> None:
+    """Pre-flight check: validate required config before any API calls.
+
+    Steps 1-2 spend real LLM credits, so a missing key that only surfaces at
+    Step 4 wastes money. Collect every problem and raise them together so the
+    operator can fix everything in one pass.
+    """
+    errors = []
+
+    niutrans_key = config.get("api_keys", {}).get("niutrans_api_key", "")
+    if not niutrans_key:
+        errors.append(
+            "api_keys.niutrans_api_key is empty (required for Step 4 — "
+            "get a key at niutrans.com)"
+        )
+
+    intermediate = config.get("pipeline", {}).get("intermediate_lang", "fi")
+    known_codes = {
+        "en", "zh", "ja", "ko", "fr", "de", "es", "pt",
+        "ru", "ar", "it", "nl", "fi",
+    }
+    if intermediate not in known_codes:
+        errors.append(
+            f"pipeline.intermediate_lang={intermediate!r} is not a recognized "
+            f"language code (known: {', '.join(sorted(known_codes))})"
+        )
+
+    if errors:
+        raise ValueError(
+            "Pipeline config validation failed:\n  - " + "\n  - ".join(errors)
+        )
 
 
 def run_standard_pipeline(text: str, config: dict, target_lang: str = "en") -> dict:
@@ -36,6 +70,7 @@ def run_standard_pipeline(text: str, config: dict, target_lang: str = "en") -> d
             - 'processing_time_ms': total elapsed time in milliseconds
     """
     llm = resolve_llm_config(config)
+    _validate_pipeline_config(config)
     niutrans_key = config["api_keys"]["niutrans_api_key"]
     intermediate_lang = config.get("pipeline", {}).get("intermediate_lang", "fi")
     engine_name = llm["display_name"]
@@ -126,7 +161,8 @@ def _lang_code_to_niutrans(code: str) -> str:
 @click.option("--config", default="config/config.toml", help="Config file path")
 @click.option("--output", default=None, help="Output file path")
 @click.option("--verbose", is_flag=True, help="Show step-by-step progress")
-def main(input_text, target, config, output, verbose):
+@click.option("--json", "json_output", is_flag=True, help="Output the full result (with step traces) as JSON")
+def main(input_text, target, config, output, verbose, json_output):
     """Run the Standard humanization pipeline."""
     import os
 
@@ -136,6 +172,16 @@ def main(input_text, target, config, output, verbose):
 
     cfg = toml.load(config)
     result = run_standard_pipeline(input_text, cfg, target_lang=target)
+
+    if json_output:
+        payload = json.dumps(result, ensure_ascii=False, indent=2)
+        if output:
+            with open(output, "w", encoding="utf-8") as f:
+                f.write(payload)
+            click.echo(f"Written to {output}")
+        else:
+            click.echo(payload)
+        return
 
     if verbose:
         click.echo("\n--- Pipeline Steps ---")
