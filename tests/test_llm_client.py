@@ -1,17 +1,8 @@
 """Unit tests for LLM client config resolution (no network)."""
 
-import importlib.util
-from pathlib import Path
-
 import pytest
 
-_LLM_CLIENT_PATH = Path(__file__).parent.parent / "src" / "standard" / "llm_client.py"
-_spec = importlib.util.spec_from_file_location("llm_client", _LLM_CLIENT_PATH)
-_llm_client = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(_llm_client)
-
-normalize_chat_completions_url = _llm_client.normalize_chat_completions_url
-resolve_llm_config = _llm_client.resolve_llm_config
+from src.standard.llm_client import normalize_chat_completions_url, resolve_llm_config
 
 
 def test_deepseek_defaults_backward_compat():
