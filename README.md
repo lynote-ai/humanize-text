@@ -4,7 +4,8 @@
 
 **An open-source pipeline for rewriting AI-generated text into natural human prose**
 
-[![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Launching%20Sept%2016-DA552F?logo=producthunt&logoColor=white)](https://www.producthunt.com/products/lynote-ai?launch=lynote-3)
+<a href="https://trendshift.io/repositories/35405?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-35405" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/35405/daily?language=Python" alt="lynote-ai%2Fhumanize-text | Trendshift" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/35405?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-35405" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/35405/daily" alt="lynote-ai%2Fhumanize-text | Trendshift" width="250" height="55"/></a>
 
 [![Stars](https://img.shields.io/github/stars/lynote-ai/humanize-text?style=flat&color=yellow)](https://github.com/lynote-ai/humanize-text/stargazers)
 [![License](https://img.shields.io/github/license/lynote-ai/humanize-text)](LICENSE)
