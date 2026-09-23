@@ -13,6 +13,7 @@
 [![Open in HF Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm.svg)](https://huggingface.co/spaces/Lynote/free-ai-detector)
 
 [官网](https://lynote.ai) · [Product Hunt](https://www.producthunt.com/products/lynote-ai?launch=lynote-3) · [体验检测器](https://github.com/lynote-ai/ai-text-detector) · [Discord](https://discord.gg/NzcH5DYzBj) · [X](https://x.com/lynote_ai)
+  ![AtomGit](https://atomgit.com/babydx/humanize-text/star/new_badge.svg)
 
 <p align="center">
   <img src="presentation/banner.png" alt="Humanize-Text" width="600"/>
@@ -288,8 +289,9 @@ MIT License。详情见 [LICENSE](LICENSE)。
 ---
 
 ## 支持与联系
-⭐ 如果这个一站式文本拟人化工具对你有帮助,请给仓库点个 **Star**。
+⭐ 国内 AtomGit 托管：https://atomgit.com/babydx/humanize-text
 
 🌐 访问官网 [lynote.ai](https://lynote.ai) 解锁完整高级功能。
 
 💬 有疑问、功能建议或使用问题?欢迎在 [Discussions](https://github.com/lynote-ai/humanize-text/discussions) 发起讨论。
+
