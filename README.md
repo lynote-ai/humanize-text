@@ -180,6 +180,18 @@ provider = "orcarouter"
 model = "deepseek/deepseek-chat"   # any OrcaRouter model slug
 ```
 
+**Cheaper Inference:**
+
+```toml
+[api_keys]
+cheaperinference_api_key = "ci_live_..."
+niutrans_api_key = "your-key"
+
+[llm]
+provider = "cheaperinference"
+model = "gpt-5.4-mini"   # any Cheaper Inference model id
+```
+
 Override the API endpoint with `base_url` in `[llm]`, or via `LLM_BASE_URL` / `LLM_API_KEY` environment variables. Full reference: [docs/configuration.md](docs/configuration.md).
 
 ### n8n Workflow

@@ -58,6 +58,19 @@ def test_orcarouter_provider():
     assert llm["display_name"] == "OrcaRouter"
 
 
+def test_cheaperinference_provider():
+    config = {
+        "api_keys": {"cheaperinference_api_key": "ci_live_test"},
+        "llm": {"provider": "cheaperinference"},
+    }
+    llm = resolve_llm_config(config)
+    assert llm["provider"] == "cheaperinference"
+    assert llm["base_url"] == "https://api.cheaperinference.com/v1"
+    assert llm["model"] == "gpt-5.4-mini"
+    assert llm["api_key"] == "ci_live_test"
+    assert llm["display_name"] == "Cheaper Inference"
+
+
 def test_base_url_override():
     config = {
         "api_keys": {"openrouter_api_key": "sk-or-test"},
@@ -124,6 +137,16 @@ def test_orcarouter_env_key(monkeypatch):
     monkeypatch.setenv("ORCAROUTER_API_KEY", "env-orca-key")
     llm = resolve_llm_config(config)
     assert llm["api_key"] == "env-orca-key"
+
+
+def test_cheaperinference_env_key(monkeypatch):
+    config = {
+        "api_keys": {},
+        "llm": {"provider": "cheaperinference"},
+    }
+    monkeypatch.setenv("CHEAPER_INFERENCE_API_KEY", "env-ci-key")
+    llm = resolve_llm_config(config)
+    assert llm["api_key"] == "env-ci-key"
 
 
 def test_missing_api_key_raises():
