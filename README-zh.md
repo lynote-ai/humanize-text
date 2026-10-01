@@ -177,6 +177,18 @@ provider = "orcarouter"
 model = "deepseek/deepseek-chat"
 ```
 
+**Cheaper Inference：**
+
+```toml
+[api_keys]
+cheaperinference_api_key = "ci_live_..."
+niutrans_api_key = "your-key"
+
+[llm]
+provider = "cheaperinference"
+model = "gpt-5.4-mini"
+```
+
 可通过 `[llm].base_url` 或环境变量 `LLM_BASE_URL` / `LLM_API_KEY` 覆盖 API 端点。完整说明见 [docs/configuration.md](docs/configuration.md)。
 
 ### n8n 工作流
