@@ -32,9 +32,35 @@
 
 大多数"拟人化"工具都是黑盒,外面贴满营销话术。这个项目是开源的,你可以直接读它到底做了什么。
 
-真正有意思的不是 LLM 改写——那人人都在做。而是这条**翻译链**。
+现在的方法是一条**结构优先(structure-first)的数据管线**,训练模型去改写*结构*、而不只是洗表层风格——完整实现见 [`training-data-pipeline/`](training-data-pipeline/)。原来的翻译链方案保留在下方,作为可运行的参考。
 
 ## 工作原理
+
+现在的方法是一条**结构优先的数据管线**:为我们自研的 AI→人类改写模型构建 SFT + 偏好(KTO)训练数据,教模型去改写*结构*、而非只洗表层风格。完整实现、策略、测试,以及每阶段 50 条 demo 记录都在 [`training-data-pipeline/`](training-data-pipeline/)。
+
+```mermaid
+flowchart LR
+    sources["公开 Crawl + 内部 private 对"] --> gates["质量 + 结构门"]
+    gates --> split["确定性分层切分"]
+    split --> sft["SFT 训练池"]
+    sft --> reserve["预留不相交的 KTO 池"]
+    reserve --> gen["6 条候选链 · 温度 0.3-1.0"]
+    gen --> select["负样本选择 + 结构优先 60/20/20 配比"]
+    select --> review["人审门"] --> kto["均衡的 KTO 训练 / 验证数据"]
+```
+
+- **SFT → KTO。** 监督阶段先学会改写任务;KTO(偏好)阶段再教它偏好真正的结构改写、而非表层编辑。
+- **结构优先的负样本。** 按欠改写、结构破坏、语义漂移、过度改写、重复、拒答等信号挑选负样本——精确 60% 欠改写 / 20% 源文照搬 / 20% 严重失败 的配比。
+- **受控的 Prompt 多样性。** 预先生成一池等价指令措辞,用固定种子采样,让模型泛化到不同措辞、而非绑定单一命令风格。
+- **确定性、可审计。** 每对数据带 SHA-256 身份、种子化切分、版本化 YAML 策略、双层校验、人审门。不含权重、endpoint 或性能声明。
+
+完整方法:[`DATA_CONSTRUCTION.zh-CN.md`](training-data-pipeline/docs/DATA_CONSTRUCTION.zh-CN.md) · [`ARCHITECTURE.zh-CN.md`](training-data-pipeline/docs/ARCHITECTURE.zh-CN.md) · [`PROMPTS.zh-CN.md`](training-data-pipeline/docs/PROMPTS.zh-CN.md)
+
+---
+
+## 旧方案参考:v1.x 翻译链
+
+*下面的翻译链是我们早期的公开探索,仍可运行、作为可读参考保留——当前方法是上面的结构优先管线。*
 
 ### 逐步管线
 
@@ -74,7 +100,7 @@ python -m src.standard.pipeline --input draft.txt
 
 > **重要:** 检测器分数是概率性的。本项目不保证改写后的文本会被判定为人类撰写,也不应被用于伪造作者身份或规避机构政策。
 
-> **本仓库的定位。** 这里的管线是我们团队 2026 年初的公开探索 —— 是我们**当时**找到的最有效方案,开源出来供任何人阅读、运行和二次开发。此后我们已远远超越了它: Lynote.ai 现在运行的是**我们自研的检测 + 拟人化模型**,基于精选高质量数据集做对抗训练。
+> **本仓库的定位。** 这里的管线是我们团队 2026 年初的公开探索 —— 是我们**当时**找到的最有效方案,开源出来供任何人阅读、运行和二次开发。此后我们已远远超越了它: Lynote.ai 现在运行的是**我们自研的检测 + 拟人化模型**,用一条结构优先的 SFT + KTO 数据管线(方法见 [`training-data-pipeline/`](training-data-pipeline/))在精选高质量数据集上训练。
 >
 > **相较本仓库的开源链路,当前 Lynote.ai 拟人化引擎的检测器绕过率提升约 30%、输出质量相对提升约 50% —— 两者都是相对本链路的提升。** 检测侧吸收了"人类写作与 AI 写作到底差在哪"的最新研究 —— 差别不在表层风格,而在篇章级的*叙事*结构（如 **[StoryScope](docs/research-notes.md)** 研究,UMD 与 Google DeepMind,COLM 2026）。只做风格层改写已经不够 —— 这正是这条开源链路存在天花板的原因。
 >
@@ -189,6 +215,8 @@ model = "deepseek/deepseek-chat"
 
 ## 真实样例展示 — 5 组完整中间步骤输出
 
+> 以下结果来自**旧方案(v1.x 翻译链)**,非当前的结构优先管线。
+
 我们在 5 段真实输入文本上端到端运行了管线,并保存了每一步的中间输出。在这些样本上,5 段最终输出都被我们测试的检测器判定为 `human`。这些是开源链路的示例轨迹,并非保证 —— 检测是概率性的,且随检测器和版本而变（见本文顶部说明）。
 
 | # | 主题 | 检测结果 | 置信度 |
@@ -219,7 +247,7 @@ model = "deepseek/deepseek-chat"
 - **关键信息保留率：** 100%（50/50 组）
 - 所有文本均完整保留原文关键信息，无重大遗漏或意义扭曲
 
-> 以上评分仅衡量**本仓库** Standard 管线的输出,是静态质量指标,并非顶部提到的 Lynote.ai 相对提升数据。
+> 以上评分仅衡量**旧方案(v1.x 翻译链)**的输出,是旧方案的静态指标,非当前结构优先方法、也非顶部提到的 Lynote.ai 数据。
 
 ---
 
@@ -240,6 +268,7 @@ model = "deepseek/deepseek-chat"
 - [管线技术详解](docs/pipeline.md) — v1.5 生产管线
 - [4 种方法论参考](docs/techniques.md) — v1.0 底层方法
 - [研究笔记](docs/research-notes.md) — 为什么纯风格改写有天花板（StoryScope, COLM 2026）
+- [训练数据管线](training-data-pipeline/) — 当前的结构优先 SFT + KTO 数据方法
 - [配置指南](docs/configuration.md)
 - [n8n 工作流指南](docs/n8n-guide.md)
 - [Lynote.ai 与开源版对比](docs/lynote-comparison.md)
@@ -248,8 +277,13 @@ model = "deepseek/deepseek-chat"
 ### 仓库结构
 
 ```
-src/
-├── standard/                # ★ v1.5.1 生产级 Standard 管线（推荐）
+training-data-pipeline/      # ★ 当前方法 — 结构优先 SFT + KTO 数据管线
+├── code/                    # 有序阶段 a–f、harness、测试
+├── configs/  data/demos/    # 版本化策略 + 每阶段 50 条 demo
+└── docs/                    # ARCHITECTURE、DATA_CONSTRUCTION、PROMPTS
+
+src/                         # 旧方案 v1.x 翻译链参考（可运行）
+├── standard/                # Standard 管线（4 步链路,CLI 入口）
 │   ├── pipeline.py          # 4 步链路,CLI 入口
 │   ├── llm_client.py        # OpenAI 兼容客户端（DeepSeek / OpenRouter）
 │   ├── llm_rewriter.py      # LLM 拟人化改写

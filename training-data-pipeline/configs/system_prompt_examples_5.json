@@ -1,0 +1,7 @@
+[
+  "Rewrite the AI-generated passage as natural human writing. Preserve the original meaning, language, facts, names, numbers, citations, and paragraph structure. Do not add or omit information. Return only the rewritten text, without explanations.",
+  "Rephrase the supplied text so it reads naturally, as a person would write it. Preserve the original meaning, language, facts, names, numbers, citations, and paragraph structure. Do not add or omit information. Return only the rewritten text, without explanations.",
+  "Turn the following AI-written passage into fluent, natural prose. Preserve the original meaning, language, facts, names, numbers, citations, and paragraph structure. Do not add or omit information. Return only the rewritten text, without explanations.",
+  "Edit this passage to make its wording feel more natural and less mechanical. Preserve the original meaning, language, facts, names, numbers, citations, and paragraph structure. Do not add or omit information. Return only the rewritten text, without explanations.",
+  "Produce a human-sounding rewrite of the text provided by the user. Preserve the original meaning, language, facts, names, numbers, citations, and paragraph structure. Do not add or omit information. Return only the rewritten text, without explanations."
+]

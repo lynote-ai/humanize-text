@@ -1,0 +1,41 @@
+schema_version: 1
+selection:
+  target_input_count: 5000
+  train_input_count: 4500
+  validation_input_count: 500
+  seed: 260917
+  generated_under_edit_fraction: 0.60
+  source_copy_fraction: 0.20
+  severe_failure_fraction: 0.20
+  review_count: 200
+positive:
+  minimum_length_ratio: 0.60
+  maximum_length_ratio: 1.50
+  short_source_sentence_maximum: 3
+  short_minimum_sentence_delta: 1
+  general_minimum_sentence_delta: 2
+  minimum_relative_sentence_delta: 0.12
+  minimum_cv_change: 0.08
+  minimum_edit_distance: 0.25
+under_edit_negative:
+  minimum_length_ratio: 0.72
+  maximum_length_ratio: 1.30
+  maximum_sentence_delta: 1
+  maximum_relative_sentence_delta: 0.12
+  maximum_cv_change: 0.08
+  maximum_edit_distance: 0.40
+  minimum_rouge_l: 0.60
+  minimum_content_recall: 0.70
+severe_failure_negative:
+  maximum_short_length_ratio: 0.55
+  minimum_long_length_ratio: 1.70
+  minimum_repeated_fourgram_fraction: 0.18
+  reject_meta_or_refusal: true
+  reject_introduced_script: true
+  reject_incomplete_ending: true
+policy_notes:
+  - Every desirable response is the registered original Humanize result.
+  - Strong structure-change positives are preferred for generated under-edit assignment.
+  - Positive rows that miss the structure threshold remain explicit Humanize fallback positives.
+  - Sixty percent of negatives are generated under-edits and twenty percent are unchanged sources.
+  - The severe twenty percent prefers generated severe failures and uses deterministic truncation or repetition as fallback.

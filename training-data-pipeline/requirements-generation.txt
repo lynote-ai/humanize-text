@@ -1,0 +1,3 @@
+-r requirements.txt
+httpx>=0.27,<1
+openai>=1.40,<2

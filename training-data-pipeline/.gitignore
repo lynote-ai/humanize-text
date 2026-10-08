@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+.pytest_cache/
+.mypy_cache/
+
+# Generated artifacts and full datasets must never be committed.
+artifacts/
+data/*
+!data/README.md
+!data/README.zh-CN.md
+!data/demos/
+!data/demos/**
+
+# Local credentials and endpoint settings.
+.env
+.env.*
+!.env.example

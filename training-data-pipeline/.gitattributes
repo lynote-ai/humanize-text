@@ -1,0 +1,3 @@
+# Keep byte-exact LF content so the demo hashes pinned in manifest.yaml and
+# data/demos/manifest.yaml stay valid across platforms (`make check` verifies them).
+* text eol=lf

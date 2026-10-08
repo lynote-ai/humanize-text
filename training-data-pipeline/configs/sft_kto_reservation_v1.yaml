@@ -1,0 +1,42 @@
+schema_version: 1
+selection:
+  target_input_count: 5000
+  selection_seed: 260916
+  kto_validation_ratio: 0.10
+  kto_validation_seed: 260917
+  require_unique_target_hashes: true
+length_buckets:
+  - name: lt_200
+    min_words: 0
+    max_words: 199
+  - name: '200_299'
+    min_words: 200
+    max_words: 299
+  - name: '300_499'
+    min_words: 300
+    max_words: 499
+  - name: '500_749'
+    min_words: 500
+    max_words: 749
+  - name: gte_750
+    min_words: 750
+    max_words: null
+quotas:
+  crawl:
+    lt_200: 600
+    '200_299': 800
+    '300_499': 1400
+    '500_749': 700
+    gte_750: 0
+  private:
+    lt_200: 400
+    '200_299': 200
+    '300_499': 350
+    '500_749': 300
+    gte_750: 250
+policy_notes:
+  - The upstream SFT construction rules and fixed validation split remain unchanged.
+  - Reserved KTO inputs are removed from SFT train and never overlap it.
+  - The original Human target is stored only as the desirable response for later KTO construction.
+  - Negative responses must be generated from the resulting SFT checkpoint and quality-reviewed later.
+  - This stage creates preparation seeds, not train-ready KTO label rows.

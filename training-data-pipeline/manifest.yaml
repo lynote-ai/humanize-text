@@ -1,0 +1,96 @@
+schema_version: 1
+version:
+  id: training-data-pipeline
+  status: prepared
+  created_on: '2026-09-22'
+  objective: Build deterministic SFT reservation and KTO datasets with bounded public demos.
+planned_training:
+  stages:
+  - name: sft-reservation
+    status: implemented
+    objective: Reserve a deterministic source-and-length-stratified subset without validation leakage.
+  - name: candidate-generation
+    status: implemented
+    objective: Generate independent multi-round candidates through an explicit OpenAI-compatible endpoint.
+  - name: negative-selection
+    status: implemented
+    objective: Build balanced KTO rows from held-out human positives and rule-supported negatives.
+  - name: structure-first-refresh
+    status: implemented
+    objective: Construct a 60/20/20 generated-under-edit, source-copy, and severe-failure negative mixture.
+inputs:
+  data_revisions: []
+  candidate_sources:
+  - id: public-crawl-source
+    status: external-public-not-bundled
+    path: supplied-by-user
+    format: registered-ai-human-pairs
+    file_pattern: source-specific
+    intended_use: public-source-sft-candidates
+  - id: private-company-source
+    status: private-not-distributed
+    path: not-published
+    format: registered-quality-reviewed-ai-human-pairs
+    file_pattern: not-published
+    intended_use: private-source-sft-candidates
+  - id: user-provided-sft-bundle
+    status: external-not-distributed
+    path: supplied-by-user
+    format: ms-swift-sft-jsonl-and-index
+    file_pattern: train.jsonl,validation.jsonl,sample_index.jsonl
+    intended_use: full-pipeline-reproduction
+build_parameters:
+  data_sources:
+    crawl: public-open-source-data
+    private: internal-company-data-not-distributed
+  public_demo_record_limit_per_stage: 50
+  public_system_prompt_example_count: 5
+  system_prompt_method:
+    pool_construction: pre-generated-randomized-wording-variants
+    assignment: seeded-pseudo-random-sampling-per-source-target-pair
+    prompt_seed: 42
+    invariants: task-contract-input-target-and-split-remain-unchanged
+  reservation_config: configs/sft_kto_reservation_v1.yaml
+  candidate_rounds: 2
+  candidate_temperatures:
+  - 0.3
+  - 0.5
+  - 0.7
+  - 0.9
+  - 1.0
+  - 1.0
+  negative_mix:
+    generated_under_edit: 0.60
+    source_copy: 0.20
+    severe_failure: 0.20
+artifacts:
+  processed_data:
+  - id: demo-sft
+    status: public-demo
+    path: data/demos/01_sft/sft_train_demo.jsonl
+    record_count: 50
+  - id: demo-reservation
+    status: public-demo
+    path: data/demos/02_reservation/kto_seed_demo.jsonl
+    record_count: 50
+  - id: demo-generation
+    status: public-demo
+    path: data/demos/03_generation/kto_candidates_demo.jsonl
+    record_count: 50
+  - id: demo-negative-selection
+    status: public-demo
+    path: data/demos/04_negative_selection/kto_train_demo.jsonl
+    record_count: 50
+  - id: demo-structure-refresh
+    status: public-demo
+    path: data/demos/05_structure_refresh/kto_train_demo.jsonl
+    record_count: 50
+  checkpoints: []
+  evaluations: []
+notes:
+- Full training, validation, candidate, review, and index datasets are intentionally excluded.
+- Public metadata uses only crawl and private source labels; internal private-dataset names and identifiers are excluded.
+- Public demos are fixed at exactly 50 JSONL records per stage and validated by make demo-validate.
+- The public Prompt document shows five examples; Prompt assignment uses seeded random sampling for reproducibility and instruction diversity.
+- Candidate generation is disabled by default and requires explicit remote-execution authorization.
+- Human review is still required before a mechanically selected KTO artifact is used for training.

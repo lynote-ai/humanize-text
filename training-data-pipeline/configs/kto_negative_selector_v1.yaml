@@ -1,0 +1,30 @@
+schema_version: 1
+selection:
+  seed: 260917
+  source_copy_fraction: 0.20
+  review_count_per_negative_type: 30
+  require_one_negative_per_input: true
+candidate_gates:
+  minimum_length_ratio: 0.55
+  maximum_length_ratio: 1.75
+  minimum_source_token_recall: 0.50
+  maximum_repeated_fourgram_fraction: 0.25
+  reject_meta_or_refusal: true
+negative_type_targets:
+  semantic_drift: 0.30
+  over_rewrite: 0.25
+  structure_damage: 0.15
+  fluency_contamination: 0.10
+type_rules:
+  semantic_max_source_token_recall: 0.82
+  over_rewrite_minimum_length_ratio: 1.20
+  over_rewrite_minimum_added_words: 60
+  over_rewrite_minimum_repeated_fourgram_fraction: 0.08
+  structure_minimum_paragraph_delta: 1
+policy_notes:
+  - Every input keeps its held-out Human target as the only desirable response.
+  - Exactly one undesirable response is selected per input, producing a one-to-one label balance.
+  - Twenty percent of inputs use the original AI text as an explicit under-edit negative.
+  - Candidate negatives must have a clear rule-based defect while avoiding catastrophic length, overlap, repetition, or refusal failures.
+  - Candidate type targets are soft within train and validation; source-copy quotas are exact per split and are balanced by source and length where candidate quality permits.
+  - The resulting dataset remains pending human review and is not train-ready until the review is accepted.

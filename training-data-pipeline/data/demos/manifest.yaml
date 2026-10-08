@@ -1,0 +1,29 @@
+schema_version: 1
+record_limit_per_stage: 50
+selection_policy: first-50-aligned-records-from-the-source-artifact
+stages:
+- stage: 01_sft
+  description: Retained SFT training records after KTO reservation
+  path: data/demos/01_sft/sft_train_demo.jsonl
+  record_count: 50
+  sha256: 08f55a9867caf0f46f3b491d67cc46279121d90f8e5ca910ea19beacc96b3d51
+- stage: 02_reservation
+  description: Reserved inputs with held-out desirable responses
+  path: data/demos/02_reservation/kto_seed_demo.jsonl
+  record_count: 50
+  sha256: 72534b81ba4273abb9f4a3050827856622663bd93929e81ffaf97ba6b72ce0ae
+- stage: 03_generation
+  description: Generated rewrite candidates aligned with reservation seeds
+  path: data/demos/03_generation/kto_candidates_demo.jsonl
+  record_count: 50
+  sha256: 2fae01ecc80ee4a04870b6d45bf8f89a8b9e0983310b353c559a148c320f3c68
+- stage: 04_negative_selection
+  description: Balanced desirable and undesirable KTO rows
+  path: data/demos/04_negative_selection/kto_train_demo.jsonl
+  record_count: 50
+  sha256: b9d51e27ec35a800b54285ddf7904cb571891fc2bce2d9a401507eac1cc78764
+- stage: 05_structure_refresh
+  description: Structure-first refreshed KTO rows
+  path: data/demos/05_structure_refresh/kto_train_demo.jsonl
+  record_count: 50
+  sha256: fc81e67448257f36bd73c8466913f3ebc7933a86c5bdfdc6f9f22a65ecdfdb5f

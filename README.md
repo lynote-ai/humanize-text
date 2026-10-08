@@ -30,9 +30,35 @@
 
 Most humanizers are a black box with marketing claims attached. This one is open source, so you can read what it actually does.
 
-The interesting part isn't the LLM rewriting — everyone does that. It's the **translation chain**.
+The current method is a **structure-first data pipeline** that trains the model to rewrite *structure*, not just launder surface style — the full implementation is in [`training-data-pipeline/`](training-data-pipeline/). The original translation-chain approach is kept below as a runnable reference.
 
-## How it works 
+## How it works
+
+The current method is a **structure-first data pipeline** that builds the SFT + preference (KTO) training data for our own AI→human rewrite model — it teaches the model to rewrite *structure*, not just launder surface style. Full implementation, policies, tests, and 50 demo records per stage live in [`training-data-pipeline/`](training-data-pipeline/).
+
+```mermaid
+flowchart LR
+    sources["Public Crawl + private pairs"] --> gates["Quality + structure gates"]
+    gates --> split["Deterministic stratified split"]
+    split --> sft["SFT training pool"]
+    sft --> reserve["Reserve a disjoint KTO pool"]
+    reserve --> gen["6 candidate chains · temps 0.3-1.0"]
+    gen --> select["Negative selection + structure-first 60/20/20 mix"]
+    select --> review["Human review gate"] --> kto["Balanced KTO train / validation"]
+```
+
+- **SFT → KTO.** A supervised pass learns the rewrite task; a KTO (preference) pass teaches it to prefer genuine structural rewrites over surface edits.
+- **Structure-first negatives.** Undesirable responses are selected for under-editing, structural damage, semantic drift, over-rewriting, repetition, and refusal — an exact 60% under-edit / 20% source-copy / 20% severe-failure mix.
+- **Controlled prompt diversity.** A pool of equivalent instruction wordings is sampled with a fixed seed, so the model generalizes across phrasings, not one command style.
+- **Deterministic & auditable.** SHA-256 identity per pair, seeded splits, versioned YAML policies, two-layer validation, and a human review gate. No weights, endpoints, or performance claims are shipped.
+
+Full method: [`DATA_CONSTRUCTION.md`](training-data-pipeline/docs/DATA_CONSTRUCTION.md) · [`ARCHITECTURE.md`](training-data-pipeline/docs/ARCHITECTURE.md) · [`PROMPTS.md`](training-data-pipeline/docs/PROMPTS.md)
+
+---
+
+## Legacy reference: v1.x translation chain
+
+*The translation chain below is our earlier open exploration. It still runs and is kept as a readable reference — the current method is the structure-first pipeline above.*
 
 ### Step-by-Step Pipeline
 
@@ -77,7 +103,7 @@ disclosure.
 > that rewritten text will be classified as human, and it should not be used to
 > misrepresent authorship or evade institutional policies.
 
-> **Where this repo fits.** The pipeline here is our team's open exploration from early 2026 — the most effective approach we'd found *at the time*, released so anyone can read it, run it, and build on it. We've since moved well beyond it: Lynote.ai now runs **proprietary detect + humanize models we trained ourselves**, using adversarial training on curated, high-quality datasets.
+> **Where this repo fits.** The pipeline here is our team's open exploration from early 2026 — the most effective approach we'd found *at the time*, released so anyone can read it, run it, and build on it. We've since moved well beyond it: Lynote.ai now runs **proprietary detect + humanize models we trained ourselves**, using a structure-first SFT + KTO data pipeline (the method in [`training-data-pipeline/`](training-data-pipeline/)) on curated, high-quality datasets.
 >
 > **Against this repo's open-source chain, Lynote.ai's current humanizer raises the detector-bypass rate by ~30% and rates ~50% higher on output quality — both are relative gains over this chain.** The detection side draws on the latest research into what actually separates human from AI writing — not surface style, but discourse-level *narrative* structure (e.g. the **[StoryScope](docs/research-notes.md)** study, UMD & Google DeepMind, COLM 2026). Style-only rewriting no longer tells the whole story — which is exactly why this open chain has a ceiling.
 >
@@ -192,6 +218,8 @@ Override the API endpoint with `base_url` in `[llm]`, or via `LLM_BASE_URL` / `L
 
 ## Showcase — 5 Real Examples with Step-by-Step Outputs
 
+> Results below are from the **legacy v1.x translation-chain scheme**, not the current structure-first pipeline.
+
 We ran the pipeline end-to-end on 5 real input texts and saved every intermediate step. On these samples, all five final outputs were classified as `human` by the detector we tested. These are illustrative traces from the open chain, not a guarantee — detection is probabilistic and varies by detector and version (see the note at the top of this README).
 
 | # | Topic | Detection | Confidence |
@@ -222,7 +250,7 @@ Tested on 50 text pairs with expert evaluation:
 - **Key Information Retention:** 100% (50/50 pairs)
 - All texts preserved original key information without distortion
 
-> These scores evaluate **this repo's** Standard Pipeline output only — a static quality measure, not the Lynote.ai relative gains referenced at the top.
+> These scores evaluate the **legacy v1.x translation-chain** output only — a static measure of the old scheme, not the current structure-first method or the Lynote.ai figures referenced at the top.
 
 ---
 
@@ -243,6 +271,7 @@ Tested on 50 text pairs with expert evaluation:
 - [Standard Pipeline Technical Details](docs/pipeline.md) — v1.5 production pipeline
 - [4 Methodologies Reference](docs/techniques.md) — v1.0 underlying methods
 - [Research Notes](docs/research-notes.md) — why style-only humanization has a ceiling (StoryScope, COLM 2026)
+- [Training-Data Pipeline](training-data-pipeline/) — the current structure-first SFT + KTO data method
 - [Configuration Guide](docs/configuration.md)
 - [n8n Workflow Guide](docs/n8n-guide.md)
 - [Lynote.ai vs Open Source Comparison](docs/lynote-comparison.md)
@@ -251,8 +280,13 @@ Tested on 50 text pairs with expert evaluation:
 ### Repo Structure
 
 ```
-src/
-├── standard/                # ★ v1.5.1 production Standard Pipeline (recommended)
+training-data-pipeline/      # ★ current method — structure-first SFT + KTO data pipeline
+├── code/                    # ordered stages a–f, harness, tests
+├── configs/  data/demos/    # versioned policies + 50 demo records per stage
+└── docs/                    # ARCHITECTURE, DATA_CONSTRUCTION, PROMPTS
+
+src/                         # legacy v1.x translation-chain reference (runnable)
+├── standard/                # Standard Pipeline (4-step chain, CLI entry)
 │   ├── pipeline.py          # 4-step chain, CLI entry
 │   ├── llm_client.py        # OpenAI-compatible client (DeepSeek / OpenRouter)
 │   ├── llm_rewriter.py      # LLM humanization rewrite
