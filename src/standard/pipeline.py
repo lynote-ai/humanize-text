@@ -141,6 +141,12 @@ def run_standard_pipeline(text: str, config: dict, target_lang: str = "en") -> d
         "result": step4,
         "steps": steps,
         "processing_time_ms": elapsed_ms,
+        "llm_info": {
+            "provider": llm["provider"],
+            "display_name": llm["display_name"],
+            "model": llm["model"],
+            "api_key_masked": llm["api_key"][:4] + "..." + llm["api_key"][-4:] if len(llm["api_key"]) > 8 else "(short)",
+        },
     }
 
 
@@ -184,7 +190,14 @@ def main(input_text, target, config, output, verbose, json_output):
         return
 
     if verbose:
-        click.echo("\n--- Pipeline Steps ---")
+        llm_info = result.get("llm_info", {})
+        if llm_info:
+            click.echo(
+                f"\n--- LLM Config: {llm_info.get('display_name', llm_info.get('provider', '?'))} "
+                f"| model={llm_info.get('model', '?')} "
+                f"| key={llm_info.get('api_key_masked', '?')} ---"
+            )
+        click.echo("--- Pipeline Steps ---")
         for s in result["steps"]:
             click.echo(f"  Step {s['step']}: {s['engine']} | {s['direction']} | {s['length']} chars")
         click.echo(f"  Total: {result['processing_time_ms']}ms\n")
