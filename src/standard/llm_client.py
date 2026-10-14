@@ -34,6 +34,12 @@ PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
         "api_key_field": "orcarouter_api_key",
         "display_name": "OrcaRouter",
     },
+    "cheaperinference": {
+        "base_url": "https://api.cheaperinference.com/v1",
+        "model": "gpt-5.4-mini",
+        "api_key_field": "cheaperinference_api_key",
+        "display_name": "Cheaper Inference",
+    },
     "litellm": {
         "base_url": "",
         "model": "deepseek/deepseek-chat",
@@ -97,6 +103,10 @@ def resolve_llm_config(config: dict) -> dict[str, Any]:
         api_key = atlas_key
     elif provider == "orcarouter" and (or_key := os.environ.get("ORCAROUTER_API_KEY")):
         api_key = or_key
+    elif provider == "cheaperinference" and (
+        ci_key := os.environ.get("CHEAPER_INFERENCE_API_KEY")
+    ):
+        api_key = ci_key
 
     if not api_key and provider != "litellm":
         raise ValueError(
