@@ -75,6 +75,17 @@ def resolve_llm_config(config: dict) -> dict[str, Any]:
     if env_base_url := os.environ.get("LLM_BASE_URL"):
         base_url = env_base_url
 
+    # Refuse plain-HTTP URLs for anything except LiteLLM (which may be a
+    # self-hosted proxy on localhost). API keys travel in the Auth header
+    # over TLS; plain HTTP leaks them to any MITM.
+    if provider != "litellm" and base_url and base_url.startswith("http://"):
+        raise ValueError(
+            f"LLM base_url must use HTTPS (got {base_url!r}). "
+            f"API keys are sent in the Authorization header and must not "
+            f"leak over plain text. LiteLLM self-hosted proxies on localhost "
+            f"are exempt — pass provider='litellm' if you need HTTP."
+        )
+
     model = llm_cfg.get("model") or pipeline_cfg.get("model") or defaults["model"]
     if env_model := os.environ.get("LLM_MODEL"):
         model = env_model
