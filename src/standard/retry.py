@@ -1,5 +1,6 @@
 """Retry with exponential backoff for transient API failures."""
 
+import random
 import time
 from typing import Callable, TypeVar
 
@@ -41,6 +42,8 @@ def retry_with_backoff(
 
         if attempt < max_retries:
             delay = min(base_delay * (2 ** attempt), max_delay)
+            # Add jitter so concurrent callers don't "thundering herd" the API
+            delay += random.uniform(0, base_delay * 0.5)
             time.sleep(delay)
 
     raise last_exc  # type: ignore[misc]
