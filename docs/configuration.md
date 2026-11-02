@@ -63,6 +63,19 @@ provider = "orcarouter"
 model = "deepseek/deepseek-chat"
 ```
 
+#### Runcrate (optional)
+
+[Runcrate](https://runcrate.ai) serves open-weight models such as DeepSeek, GLM, Kimi and Qwen through an OpenAI-compatible endpoint. Keys are at https://runcrate.ai/dashboard/api-keys.
+
+```toml
+[api_keys]
+runcrate_api_key = "rc-..."
+
+[llm]
+provider = "runcrate"
+model = "deepseek-ai/DeepSeek-V4.1-Flash"
+```
+
 #### Provider defaults
 
 | Provider | Default `base_url` | Default `model` | Config key |
@@ -71,6 +84,7 @@ model = "deepseek/deepseek-chat"
 | `openrouter` | `https://openrouter.ai/api/v1` | `deepseek/deepseek-chat` | `api_keys.openrouter_api_key` |
 | `atlascloud` | `https://api.atlascloud.ai/v1` | `qwen/qwen3.5-flash` | `api_keys.atlascloud_api_key` |
 | `orcarouter` | `https://api.orcarouter.ai/v1` | `deepseek/deepseek-chat` | `api_keys.orcarouter_api_key` |
+| `runcrate` | `https://api.runcrate.ai/v1` | `deepseek-ai/DeepSeek-V4.1-Flash` | `api_keys.runcrate_api_key` |
 
 Set `base_url` in `[llm]` to override the provider preset (e.g. a self-hosted OpenAI-compatible proxy). Leave empty to use the default for the selected provider.
 
@@ -103,10 +117,11 @@ deepseek_api_key = ""     # Required when llm.provider = "deepseek"
 openrouter_api_key = ""   # Required when llm.provider = "openrouter"
 atlascloud_api_key = ""   # Required when llm.provider = "atlascloud"
 orcarouter_api_key = ""   # Required when llm.provider = "orcarouter"
+runcrate_api_key = ""     # Required when llm.provider = "runcrate"
 niutrans_api_key = ""     # Required
 
 [llm]
-provider = "deepseek"     # "deepseek" | "openrouter" | "atlascloud" | "orcarouter"
+provider = "deepseek"     # "deepseek" | "openrouter" | "atlascloud" | "orcarouter" | "runcrate"
 base_url = ""             # empty = provider default; set to override
 model = ""                # empty = provider default model
 temperature = 1.3         # 1.1-1.5 range (1.3 recommended)
@@ -125,13 +140,14 @@ Optional runtime overrides (take precedence over TOML):
 
 | Variable | Purpose |
 |----------|---------|
-| `LLM_PROVIDER` | `deepseek`, `openrouter`, `atlascloud`, or `orcarouter` |
+| `LLM_PROVIDER` | `deepseek`, `openrouter`, `atlascloud`, `orcarouter`, or `runcrate` |
 | `LLM_BASE_URL` | Override API base URL |
 | `LLM_API_KEY` | Generic API key override |
 | `OPENROUTER_API_KEY` | OpenRouter key when provider is `openrouter` |
 | `DEEPSEEK_API_KEY` | DeepSeek key when provider is `deepseek` |
 | `ATLASCLOUD_API_KEY` | Atlas Cloud key when provider is `atlascloud` |
 | `ORCAROUTER_API_KEY` | OrcaRouter key when provider is `orcarouter` |
+| `RUNCRATE_API_KEY` | Runcrate key when provider is `runcrate` |
 | `LLM_MODEL` | Override model slug |
 
 **Example — switch to OpenRouter via environment (no TOML edit):**

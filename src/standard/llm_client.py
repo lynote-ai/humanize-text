@@ -34,6 +34,12 @@ PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
         "api_key_field": "orcarouter_api_key",
         "display_name": "OrcaRouter",
     },
+    "runcrate": {
+        "base_url": "https://api.runcrate.ai/v1",
+        "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+        "api_key_field": "runcrate_api_key",
+        "display_name": "Runcrate",
+    },
     "litellm": {
         "base_url": "",
         "model": "deepseek/deepseek-chat",
@@ -97,6 +103,8 @@ def resolve_llm_config(config: dict) -> dict[str, Any]:
         api_key = atlas_key
     elif provider == "orcarouter" and (or_key := os.environ.get("ORCAROUTER_API_KEY")):
         api_key = or_key
+    elif provider == "runcrate" and (rc_key := os.environ.get("RUNCRATE_API_KEY")):
+        api_key = rc_key
 
     if not api_key and provider != "litellm":
         raise ValueError(

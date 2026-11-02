@@ -66,7 +66,7 @@ python -m src.standard.pipeline --input "Your AI-generated text here"
 ## Why this project
 
 - **Open, not a black box.** Most humanizers hide what they do behind marketing claims. Here every step is readable code, and every run can be traced.
-- **Runs end-to-end with your own keys.** DeepSeek (default), OpenRouter, Atlas Cloud, OrcaRouter, LiteLLM, or any OpenAI-compatible endpoint.
+- **Runs end-to-end with your own keys.** DeepSeek (default), OpenRouter, Atlas Cloud, OrcaRouter, Runcrate, LiteLLM, or any OpenAI-compatible endpoint.
 - **Three ways to run it.** Python CLI, a no-code [n8n workflow](n8n/humanize_standard.json), or Docker.
 - **Research included.** We also open-source the [structure-first data pipeline](#-how-we-train-our-own-model-research) we use to train our own rewrite model.
 
@@ -111,7 +111,7 @@ Technical details: [docs/pipeline.md](docs/pipeline.md) · [docs/techniques.md](
 | **Hosted** | Anyone who wants zero setup | [lynote.ai](https://lynote.ai/ai-humanizer?utm_source=github&utm_medium=readme&utm_campaign=humanize-text&utm_content=ways-to-run) or the [Humanizer API](#hosted-version-lynoteai--api) |
 
 <details>
-<summary><b>Configuration examples (DeepSeek, OpenRouter, Atlas Cloud, OrcaRouter)</b></summary>
+<summary><b>Configuration examples (DeepSeek, OpenRouter, Atlas Cloud, OrcaRouter, Runcrate)</b></summary>
 
 **DeepSeek (default):**
 
@@ -158,6 +158,18 @@ niutrans_api_key = "your-key"
 [llm]
 provider = "orcarouter"
 model = "deepseek/deepseek-chat"   # any OrcaRouter model slug
+```
+
+**Runcrate:**
+
+```toml
+[api_keys]
+runcrate_api_key = "rc-..."
+niutrans_api_key = "your-key"
+
+[llm]
+provider = "runcrate"
+model = "deepseek-ai/DeepSeek-V4.1-Flash"   # any Runcrate model id
 ```
 
 Override the endpoint with `base_url` in `[llm]`, or via the `LLM_BASE_URL` / `LLM_API_KEY` environment variables. Full reference: [docs/configuration.md](docs/configuration.md).

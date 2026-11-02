@@ -231,6 +231,18 @@ provider = "orcarouter"
 model = "deepseek/deepseek-chat"
 ```
 
+**Runcrate：**
+
+```toml
+[api_keys]
+runcrate_api_key = "rc-..."
+niutrans_api_key = "your-key"
+
+[llm]
+provider = "runcrate"
+model = "deepseek-ai/DeepSeek-V4.1-Flash"
+```
+
 可通过 `[llm].base_url` 或环境变量 `LLM_BASE_URL` / `LLM_API_KEY` 覆盖 API 端点。完整说明见 [docs/configuration.md](docs/configuration.md)。
 
 ### n8n 工作流

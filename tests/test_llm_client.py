@@ -58,6 +58,19 @@ def test_orcarouter_provider():
     assert llm["display_name"] == "OrcaRouter"
 
 
+def test_runcrate_provider():
+    config = {
+        "api_keys": {"runcrate_api_key": "rc-test"},
+        "llm": {"provider": "runcrate"},
+    }
+    llm = resolve_llm_config(config)
+    assert llm["provider"] == "runcrate"
+    assert llm["base_url"] == "https://api.runcrate.ai/v1"
+    assert llm["model"] == "deepseek-ai/DeepSeek-V4.1-Flash"
+    assert llm["api_key"] == "rc-test"
+    assert llm["display_name"] == "Runcrate"
+
+
 def test_base_url_override():
     config = {
         "api_keys": {"openrouter_api_key": "sk-or-test"},
@@ -124,6 +137,16 @@ def test_orcarouter_env_key(monkeypatch):
     monkeypatch.setenv("ORCAROUTER_API_KEY", "env-orca-key")
     llm = resolve_llm_config(config)
     assert llm["api_key"] == "env-orca-key"
+
+
+def test_runcrate_env_key(monkeypatch):
+    config = {
+        "api_keys": {},
+        "llm": {"provider": "runcrate"},
+    }
+    monkeypatch.setenv("RUNCRATE_API_KEY", "env-runcrate-key")
+    llm = resolve_llm_config(config)
+    assert llm["api_key"] == "env-runcrate-key"
 
 
 def test_missing_api_key_raises():
